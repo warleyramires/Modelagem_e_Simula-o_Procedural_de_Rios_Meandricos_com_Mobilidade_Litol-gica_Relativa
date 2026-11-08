@@ -31,6 +31,35 @@ If you use this code in any way, please credit the original article:
 ```	
 
 ### Additional notes
+
+### Lithologic mobility extension
+
+The simulator supports an optional 2D lithologic mobility field `E(x,y)`. It is
+sampled at the external bank, at half the channel width from each centerline
+point, and modulates the lateral migration rate independently of terrain slope.
+Values are normalized by the field mean and clamped to `[0.25, 2.0]`.
+
+Use the three-argument constructor to enable it:
+
+```cpp
+ScalarField2D terrain = LoadScalarFieldFromFile(200.0, 200.0, 2500.0, "../Resources/hf.png");
+ScalarField2D mobility = LoadLithologyFromFile(200.0, 200.0, "../Resources/lithology.png");
+MeanderSimulation simulation(1234, terrain, mobility);
+```
+
+The grayscale image is converted to `[0, 1]`. A uniform field is neutral, so
+the original simulation remains available through the existing constructors.
+
+The regression test can be built and run from the repository root with:
+
+```sh
+g++ -std=c++17 -O2 -ICode/Include Tests/lithology_regression.cpp \
+  Code/Source/cubic-curve-set.cpp Code/Source/cubic-curve.cpp \
+  Code/Source/cubic.cpp Code/Source/linear.cpp \
+  Code/Source/meanders-channel.cpp Code/Source/meanders-simulation.cpp \
+  Code/Source/quadric.cpp -o /tmp/lithology_regression
+/tmp/lithology_regression
+```
 There are great resources on the web on the topic that did not make it into the final paper but still deserve to be mentioned. Here is a non-exhaustive list:
 * [Meander - Robert Hodgin](https://roberthodgin.com/project/meander): a procedural system for generating historical maps of rivers that never existed. Insanely good visualization, and describe the core components of the migration in a very accessible manner. Go take a look!
 * [Procedural Hydrology, Nicholas McDonald](https://nickmcd.me/2023/12/12/meandering-rivers-in-particle-based-hydraulic-erosion-simulations/#meandering-river-simulation): on top of [his first blog post](https://nickmcd.me/2020/04/15/procedural-hydrology/) on erosion simulation, this second one that came out in December allows to reproduce very convincing meandering rivers over an entire terrain using a particle-based system. I did not look into the (very) detailed blog post that describe the method yet, but the visuals are great.
