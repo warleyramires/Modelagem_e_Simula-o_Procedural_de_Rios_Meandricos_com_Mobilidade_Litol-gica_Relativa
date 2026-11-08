@@ -782,6 +782,19 @@ public:
 		return min;
 	}
 
+	/*
+	\brief Compute the arithmetic mean of the field values.
+	*/
+	inline double Mean() const
+	{
+		if (values.empty())
+			return 0.0;
+		double sum = 0.0;
+		for (double value : values)
+			sum += value;
+		return sum / double(values.size());
+	}
+
 	/*!
 	\brief Returns the size of x-axis of the array.
 	*/

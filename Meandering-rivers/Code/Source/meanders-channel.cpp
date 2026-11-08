@@ -174,6 +174,84 @@ void Channel::Migrate(
 	pts = outPoints;
 }
 
+void Channel::Migrate(
+	const Box2D& domain,
+	const Grid2<Vector2>& terrainGrad,
+	const std::vector<PointConstraint>& constraints,
+	const ScalarField2D& lithology,
+	double lithologyMean,
+	double mobilityMinimum,
+	double mobilityMaximum)
+{
+	std::vector<Vector2> outPoints = pts;
+	const double channelSize = Math::Sqr(Length());
+	const double maxSlopeSqr = Math::Sqr(MeanderSimulation::MaxSlope);
+	const double halfWidth = 0.5 * width;
+	const double curvatureEpsilon = 1.0e-12;
+
+	for (int i = 1; i < pts.size() - 1; i++)
+	{
+		if (!domain.Contains(pts[i]))
+			continue;
+
+		double d1 = SquaredMagnitude(pts[i] - pts[0]);
+		double d2 = SquaredMagnitude(pts[i] - pts[pts.size() - 1]);
+		double wf = 1.0 - Math::CubicSmoothCompact(Math::Min(d1, d2), channelSize * MeanderSimulation::ChannelFalloff);
+
+		Vector2 q = pts[i] - domain[0];
+		double u = q[0] / (domain[1].x - domain[0].x);
+		double v = q[1] / (domain[1].y - domain[0].y);
+		double sq = SquaredMagnitude(terrainGrad.BilinearValue(v, u));
+		double wt = Math::CubicSmoothCompact(sq, maxSlopeSqr);
+
+		const double baseWeight = wf * wt;
+		const Vector2 normal = Normalize(Tangent(i).Orthogonal());
+		const double curvature = Curvature(i);
+		const Vector2 externalOffset = curvature > curvatureEpsilon
+			? -normal * halfWidth
+			: (curvature < -curvatureEpsilon ? normal * halfWidth : Vector2(0.0));
+
+		double mobility = 1.0;
+		if (lithologyMean > 1.0e-12 && lithology.SizeX() > 1 && lithology.SizeY() > 1)
+		{
+			auto sample = [&](const Vector2& p, double& value) -> bool
+			{
+				if (!lithology.Inside(p))
+					return false;
+				value = lithology.GetValueBilinear(p);
+				return value >= 0.0 && Math::IsNumber(value);
+			};
+
+			double selected = lithologyMean;
+			if (externalOffset != Vector2(0.0))
+			{
+				if (!sample(pts[i] + externalOffset, selected))
+					selected = lithologyMean;
+			}
+			else
+			{
+				double left = 0.0, right = 0.0;
+				const bool hasLeft = sample(pts[i] - normal * halfWidth, left);
+				const bool hasRight = sample(pts[i] + normal * halfWidth, right);
+				if (hasLeft && hasRight)
+					selected = 0.5 * (left + right);
+				else if (hasLeft)
+					selected = left;
+				else if (hasRight)
+					selected = right;
+			}
+
+			mobility = Math::Clamp(selected / lithologyMean, mobilityMinimum, mobilityMaximum);
+		}
+
+		const Vector2 normalMigration = MigrationDirection(i, constraints);
+		const double migration = baseWeight * mobility * MeanderSimulation::Dt * ptsMigrationRates[i];
+		outPoints[i][0] = pts[i][0] + migration * normalMigration[0];
+		outPoints[i][1] = pts[i][1] + migration * normalMigration[1];
+	}
+	pts = outPoints;
+}
+
 std::vector<Vector2> Channel::DoCutoff(int cutoffIndex, int j)
 {
 	// points[j] must be linked to points[cutoffIndex]

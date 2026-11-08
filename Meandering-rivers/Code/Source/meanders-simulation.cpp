@@ -22,6 +22,9 @@ double MeanderSimulation::SamplingDistance = 50.0;
 MeanderSimulation::MeanderSimulation()
 {
 	terrain = ScalarField2D(256, 256, Box2D(Vector2(0.0), 2500.0));
+	terrainGradient = terrain.GradientField();
+	lithologyMean = 1.0;
+	lithologyEnabled = false;
 	srand(1234);
 }
 
@@ -33,6 +36,8 @@ MeanderSimulation::MeanderSimulation(int seed)
 {
 	terrain = ScalarField2D(256, 256, Box2D(Vector2(0.0), 2500.0));
 	terrainGradient = terrain.GradientField();
+	lithologyMean = 1.0;
+	lithologyEnabled = false;
 	srand(seed);
 }
 
@@ -44,7 +49,37 @@ MeanderSimulation::MeanderSimulation(int seed)
 MeanderSimulation::MeanderSimulation(int seed, const ScalarField2D& hf)
 	: terrain(hf), terrainGradient(hf.GradientField())
 {
+	lithologyMean = 1.0;
+	lithologyEnabled = false;
 	srand(seed);
+}
+
+MeanderSimulation::MeanderSimulation(int seed, const ScalarField2D& hf, const ScalarField2D& lithologyField)
+	: terrain(hf), terrainGradient(hf.GradientField())
+{
+	lithologyMean = 1.0;
+	lithologyEnabled = false;
+	SetLithologyField(lithologyField);
+	srand(seed);
+}
+
+void MeanderSimulation::SetLithologyField(const ScalarField2D& lithologyField)
+{
+	if (lithologyField.SizeX() < 2 || lithologyField.SizeY() < 2)
+	{
+		ClearLithologyField();
+		return;
+	}
+	lithology = lithologyField;
+	lithologyMean = lithology.Mean();
+	lithologyEnabled = lithologyMean > 1.0e-12;
+}
+
+void MeanderSimulation::ClearLithologyField()
+{
+	lithology = ScalarField2D();
+	lithologyMean = 1.0;
+	lithologyEnabled = false;
 }
 
 /*!
@@ -185,7 +220,12 @@ void MeanderSimulation::MigrateAllChannels()
 	for (int i = 0; i < results.size(); i++)
 	{
 		if (results[i].Size() > 3)
-			results[i].Migrate(GetBox(), terrainGradient, constraints);
+		{
+			if (lithologyEnabled)
+				results[i].Migrate(GetBox(), terrainGradient, constraints, lithology, lithologyMean, 0.25, 2.0);
+			else
+				results[i].Migrate(GetBox(), terrainGradient, constraints);
+		}
 	}
 	channels = results;
 }

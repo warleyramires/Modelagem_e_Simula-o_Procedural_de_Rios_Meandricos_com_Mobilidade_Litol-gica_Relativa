@@ -88,6 +88,15 @@ public:
 		const Grid2<Vector2>& terrainGrad,
 		const std::vector<PointConstraint>& constraints
 	);
+	void Migrate(
+		const Box2D& domain,
+		const Grid2<Vector2>& terrainGrad,
+		const std::vector<PointConstraint>& constraints,
+		const ScalarField2D& lithology,
+		double lithologyMean,
+		double mobilityMinimum,
+		double mobilityMaximum
+	);
 	std::vector<Vector2> DoCutoff(int cutoffIndex, int j);
 	std::vector<Vector2> DoAvulsion(int startIndex, const ScalarField2D& bedrock);
 
@@ -103,6 +112,9 @@ class MeanderSimulation
 private:
 	ScalarField2D terrain;
 	Grid2<Vector2> terrainGradient;
+	ScalarField2D lithology;
+	double lithologyMean;
+	bool lithologyEnabled;
 	std::vector<Channel> channels;
 	std::vector<PointConstraint> constraints;
 
@@ -125,6 +137,10 @@ public:
 	MeanderSimulation();
 	MeanderSimulation(int seed);
 	MeanderSimulation(int seed, const ScalarField2D& hf);
+	MeanderSimulation(int seed, const ScalarField2D& hf, const ScalarField2D& lithology);
+
+	void SetLithologyField(const ScalarField2D& lithology);
+	void ClearLithologyField();
 
 	// User control
 	void AddChannel(const Channel& ch);
@@ -137,6 +153,7 @@ public:
 
 	// Utility
 	Box2D GetBox() const;
+	const std::vector<Channel>& Channels() const { return channels; }
 	void OutputImage(const std::string& path, int width, int height) const;
 
 private:
