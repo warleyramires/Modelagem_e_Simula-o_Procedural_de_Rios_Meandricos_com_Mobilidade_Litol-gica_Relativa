@@ -211,31 +211,34 @@ Apesar da flexibilidade dos controles topográficos e autorais da Equação~\eqr
 Diferencie o método original da contribuição da equipe. Use diagramas, pseudocódigo
 ou equações quando melhorarem a reprodutibilidade.}
 
-Diferentemente da Equação~\eqref{eq:baseline_step}, na qual uma planície horizontal ($\|\nabla h\| = 0 \Rightarrow w_t(i) = 1$) implica resistência uniforme à erosão em todo o domínio, propomos desacoplar a topografia da erodibilidade lateral do substrato por meio de um campo escalar bidimensional independente $E(x,y) \ge 0$.
+Para representar variações geológicas ao longo da planície aluvial sem alterar o relevo de entrada, introduzimos um campo escalar bidimensional de mobilidade litológica $E : \Omega \subset \mathbb{R}^2 \to \mathbb{R}_{\ge 0}$, definido sobre a mesma caixa delimitadora $\Omega$ do terreno $\mathcal{T}$. Enquanto o peso topográfico $w_t(i)$ da Equação~\eqref{eq:baseline_step} depende exclusivamente da magnitude do gradiente de elevação $\|\nabla h(\mathbf{p}_i)\|$, o campo $E(x,y)$ descreve a facilidade relativa com que o material das margens cede à ação abrasiva da corrente. Essa separação permite modelar planícies horizontais ($\|\nabla h\| \approx 0$) compostas por unidades geológicas heterogêneas, como terraços consolidados, intrusões rochosas ou depósitos arenosos recém-formados, a partir de mapas procedurais ou imagens em escala de cinza fornecidas pelo usuário.
 
-Como o desgaste fluvial ocorre fisicamente na margem côncava (externa) da curva, amostramos o campo $E(x,y)$ na posição da margem externa $\mathbf{x}_{\text{bank}}(i)$, deslocada a meia largura ($w/2$) do ponto central $\mathbf{p}_i$ conforme o sinal da curvatura $C(i)$:
+A dinâmica hidrodinâmica concentra o desgaste mecânico na margem côncava externa (\textit{cut bank}) de cada curva, enquanto a margem interna acumula sedimentos. Para capturar esse efeito no modelo unidimensional de linha central, amostramos o substrato na posição da margem externa $\mathbf{x}_{\text{bank}}(i)$, deslocada lateralmente a uma distância de meia largura ($w/2$) do vértice central $\mathbf{p}_i$. Definimos a normal unitária ao canal por $\mathbf{n}_i = \mathbf{t}_i^\perp / \|\mathbf{t}_i^\perp\|$, em que $\mathbf{t}_i$ representa o vetor tangente obtido por diferenças finitas centrais. O vetor de deslocamento lateral $\boldsymbol{\delta}_{\text{ext}}(i)$ segue a orientação ditada pelo sinal da curvatura local $C(i)$ e por um limiar de tolerância $\varepsilon_\kappa = 10^{-12}$:
 \begin{equation}
     \mathbf{x}_{\text{bank}}(i) = \mathbf{p}_i + \boldsymbol{\delta}_{\text{ext}}(i), \quad
     \boldsymbol{\delta}_{\text{ext}}(i) =
     \begin{cases}
         -\frac{w}{2} \mathbf{n}_i, & \text{se } C(i) > \varepsilon_\kappa, \\
         +\frac{w}{2} \mathbf{n}_i, & \text{se } C(i) < -\varepsilon_\kappa, \\
-        \mathbf{0}, & \text{se } |C(i)| \le \varepsilon_\kappa,
+        \mathbf{0}, & \text{se } |C(i)| \le \varepsilon_\kappa.
     \end{cases}
     \label{eq:cut_bank_offset}
 \end{equation}
-onde $\mathbf{n}_i$ é a normal unitária ao canal e $\varepsilon_\kappa = 10^{-12}$. Em zonas de inflexão ($|C(i)| \le \varepsilon_\kappa$), consultamos ambas as margens ($\mathbf{p}_i \pm \frac{w}{2}\mathbf{n}_i$) por interpolação bilinear e tomamos a média das amostras válidas.
+Em trechos quase retilíneos correspondentes a pontos de inflexão ($|C(i)| \le \varepsilon_\kappa$), o lado externo alternaria bruscamente entre vértices consecutivos. Nesses casos, consultamos bilateralmente ambas as margens ($\mathbf{p}_i - \frac{w}{2}\mathbf{n}_i$ e $\mathbf{p}_i + \frac{w}{2}\mathbf{n}_i$) por interpolação bilinear e adotamos a média aritmética das consultas válidas. Amostras que recaiam fora dos limites do domínio $\Omega$ ou que apresentem valores indefinidos recebem a média espacial $\bar{E}$ como condição de contorno neutra.
 
-O valor amostrado $E_{\text{sel}}(i)$ é normalizado pela média espacial $\bar{E}$ do campo litológico e limitado ao intervalo $[g_{\min}, g_{\max}] = [0{,}25,\, 2{,}0]$:
+A resposta cinemática da margem depende do contraste entre a litologia local e o comportamento médio do leito. Calculamos a média espacial de referência $\bar{E} = \frac{1}{N_x N_y} \sum_{u,v} E(u,v)$ sobre todos os nós da grade regular discretizada. A partir do valor amostrado $E_{\text{sel}}(i)$ na margem externa, determinamos o fator adimensional de mobilidade litológica $g_i$:
 \begin{equation}
     g_i = \text{clamp}\left( \frac{E_{\text{sel}}(i)}{\bar{E}}, \, g_{\min}, \, g_{\max} \right),
     \label{eq:mobility_factor}
 \end{equation}
-resultando na equação de migração modificada:
+adotando os limites empíricos $[g_{\min}, g_{\max}] = [0{,}25,\, 2{,}0]$. Essa razão estabelece dois regimes físicos bem definidos. Quando a margem externa intercepta materiais resistentes ($E_{\text{sel}}(i) < \bar{E}$), o fator assume valores em $[0{,}25,\, 1{,}0)$, desacelerando a progressão lateral e restringindo o alargamento da alça meândrica. Quando o leito atinge materiais erodíveis ($E_{\text{sel}}(i) > \bar{E}$), tem-se $g_i \in (1{,}0,\, 2{,}0]$, intensificando a migração. No aspecto computacional, a limitação por saturação (\textit{clamping}) desempenha um papel duplo: o piso $g_{\min} = 0{,}25$ evita o travamento estático completo da linha central, o que permite a evolução contínua do canal mesmo em rochas duras, enquanto o teto $g_{\max} = 2{,}0$ impede deslocamentos pontuais excessivos em um único intervalo de tempo $\Delta t$, preservando o espaçamento regular exigido pela rotina de reamostragem por splines cúbicas.
+
+A integração do fator de mobilidade à cinemática do canal resulta na equação final de migração lateral:
 \begin{equation}
     \mathbf{p}_i(t + \Delta t) = \mathbf{p}_i(t) + w_f(i) \, w_t(i) \, g_i \, \Delta t \, \mu_{\text{base}}(i) \, \mathbf{d}_{\text{mig}}(i).
     \label{eq:modified_step}
 \end{equation}
+Essa formulação reúne duas propriedades essenciais para a simulação procedural. A primeira é a invariância sob substrato uniforme: para qualquer campo constante $E(x,y) = c > 0$, a consulta pontual coincide com a média ($E_{\text{sel}}(i) = \bar{E} = c$), resultando em $g_i = 1{,}0$ e reconduzindo a Equação~\eqref{eq:modified_step} estritamente à Equação~\eqref{eq:baseline_step} da formulação original. A segunda propriedade reside na propagação dinâmica a jusante. Embora o fator $g_i$ atue pontualmente sobre o deslocamento no instante corrente, a deflexão geométrica acumulada nos vértices modifica o cálculo da curvatura discreta $C(i)$ e da convolução exponencial a montante nos passos temporais subsequentes. Dessa forma, a desaceleração provocada por uma barreira litológica reorganiza as alças posicionadas rio abaixo, o que altera o comprimento de onda do canal e modifica o instante de disparo dos eventos topológicos de \textit{cutoff} e avulsão.
 
 % =============================================================================
 \section{Implementação}
