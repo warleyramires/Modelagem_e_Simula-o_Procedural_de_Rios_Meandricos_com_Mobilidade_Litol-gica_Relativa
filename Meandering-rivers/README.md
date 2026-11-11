@@ -63,6 +63,27 @@ g++ -std=c++17 -O2 -ICode/Include Tests/lithology_regression.cpp \
 O teste verifica que um campo uniforme reproduz a baseline e que um campo
 heterogêneo modifica a trajetória sem produzir valores inválidos.
 
+## Benchmark comparativo
+
+O benchmark reproduz a baseline original do commit `c86c93a` e compara três
+variantes em quatro cenários:
+
+- `original`;
+- `modificado_neutro`, com `E=1`;
+- `modificado_litologico`, com zonas resistentes e erodíveis.
+
+Cada combinação possui 100 repetições usando as sementes `1234`, `4321` e
+`9999`. Para executar novamente:
+
+```sh
+./Benchmarks/run_benchmark.sh
+```
+
+Os dados brutos, o resumo estatístico e o relatório estão em
+`Benchmarks/results/`. O relatório separa o custo estrutural da extensão do
+custo adicional das consultas litológicas. A metodologia detalhada está em
+[Benchmarks/README.md](Benchmarks/README.md).
+
 ## Uso do campo litológico
 
 ```cpp
