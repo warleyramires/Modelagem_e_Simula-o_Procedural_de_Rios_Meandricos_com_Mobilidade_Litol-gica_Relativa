@@ -14,7 +14,7 @@ ORIGINAL_ROOT="$TEMP/original"
 mkdir -p "$ORIGINAL_ROOT"
 
 git -C "$REPOSITORY" archive --format=tar "$BASELINE_COMMIT" -- Meandering-rivers/Code \
-	| tar -xf - -C "$TEMP"
+	| tar -xf - -C "$ORIGINAL_ROOT"
 
 SOURCE_FILES=(
 	Code/Source/cubic-curve-set.cpp
