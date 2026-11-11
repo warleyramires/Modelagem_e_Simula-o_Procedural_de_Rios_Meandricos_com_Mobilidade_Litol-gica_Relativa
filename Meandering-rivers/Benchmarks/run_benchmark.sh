@@ -54,7 +54,8 @@ printf '%s\n' "flags,-std=c++17 -O2" >> "$ENVIRONMENT"
 printf '%s\n' "system,$(uname -srmo)" >> "$ENVIRONMENT"
 
 "$TEMP/benchmark_original" plano_500 "$REPETITIONS" > "$TEMP/original.csv"
-tail -n +2 "$TEMP/original.csv" > "$RAW"
+head -n 1 "$TEMP/original.csv" > "$RAW"
+tail -n +2 "$TEMP/original.csv" >> "$RAW"
 for scenario in terreno_1200 avulsao_750 litologia_500; do
 	"$TEMP/benchmark_original" "$scenario" "$REPETITIONS" > "$TEMP/original.csv"
 	tail -n +2 "$TEMP/original.csv" >> "$RAW"
