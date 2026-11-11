@@ -1,0 +1,7 @@
+benchmark_version,1
+baseline_commit,c86c93a
+modified_commit,f48f0913e1ac8ac8f977b038b4dda5e26f272892
+repetitions,100
+compiler,g++ (GCC) 16.2.1 20260810
+flags,-std=c++17 -O2
+system,Linux 7.3.1-1-cachyos x86_64 GNU/Linux
