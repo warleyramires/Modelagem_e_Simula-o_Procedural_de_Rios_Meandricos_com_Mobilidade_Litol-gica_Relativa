@@ -41,6 +41,11 @@ def main():
         for (variant, scenario), rows in groups.items()
         if variant == "original"
     }
+    neutral_times = {
+        scenario: statistics.median(float(row["total_time_ns"]) for row in rows)
+        for (variant, scenario), rows in groups.items()
+        if variant == "modificado_neutro"
+    }
     summary_rows = []
     for (variant, scenario), rows in sorted(groups.items()):
         times = [float(row["total_time_ns"]) for row in rows]
@@ -64,6 +69,10 @@ def main():
             "time_per_step_median_ns": statistics.median(time_per_step),
             "overhead_vs_original_percent": 100.0 * (median - baseline) / baseline,
             "speedup_vs_original": baseline / median,
+            "overhead_vs_neutral_percent": (
+                100.0 * (median - neutral_times[scenario]) / neutral_times[scenario]
+                if scenario in neutral_times else ""
+            ),
             "final_sinuosity_mean": sinuosity_mean,
             "final_sinuosity_stddev": sinuosity_std,
             "max_lateral_displacement_mean": statistics.mean(displacement),
@@ -87,13 +96,16 @@ def main():
         handle.write("Os tempos estão em nanossegundos e foram medidos apenas durante os passos da simulação.\n\n")
 
         handle.write("## Resultados de tempo\n\n")
-        handle.write("| Variante | Cenário | Amostras | Mediana (ns) | p95 (ns) | Desvio (ns) | Overhead vs original | Speedup |\n")
-        handle.write("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |\n")
+        handle.write("| Variante | Cenário | Amostras | Mediana (ns) | p95 (ns) | Desvio (ns) | Overhead vs original | Overhead vs neutro | Speedup |\n")
+        handle.write("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |\n")
         for row in summary_rows:
+            neutral_overhead = row["overhead_vs_neutral_percent"]
+            neutral_display = "" if neutral_overhead == "" else f"{neutral_overhead:.2f}%"
             handle.write(
                 f"| {row['variant']} | {row['scenario']} | {row['samples']} | "
                 f"{row['time_median_ns']:.2f} | {row['time_p95_ns']:.2f} | "
                 f"{row['time_stddev_ns']:.2f} | {row['overhead_vs_original_percent']:.2f}% | "
+                f"{neutral_display} | "
                 f"{row['speedup_vs_original']:.4f}x |\n"
             )
 
@@ -111,6 +123,7 @@ def main():
         handle.write("- `modificado_neutro` mede o custo estrutural da extensão quando `E=1`.\n")
         handle.write("- `modificado_litologico` mede o custo adicional das consultas e da modulação espacial.\n")
         handle.write("- O overhead é calculado pela mediana em relação à variante `original` do mesmo cenário.\n")
+        handle.write("- O overhead contra `modificado_neutro` isola o custo da litologia.\n")
         handle.write("- Os CSVs bruto e resumido permitem reproduzir as tabelas sem executar novamente o benchmark.\n")
 
     return 0
