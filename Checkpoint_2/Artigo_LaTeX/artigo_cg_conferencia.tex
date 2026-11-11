@@ -284,23 +284,37 @@ Adotamos quatro métricas objetivas: (i) erro geométrico máximo $L_\infty$ ent
 \orientacao{Apresente resultados quantitativos e visuais. Toda tabela e figura deve ser
 citada no texto e responder a uma questão experimental. Evite imagens meramente decorativas.}
 
-A Tabela~\ref{tab:resultado} sintetiza os resultados preliminares obtidos na bateria de validação de regressão (\texttt{Tests/lithology\_regression.cpp}) após $50$ passos de simulação com \texttt{seed = 1234}. As Figuras~\ref{fig:comparacao} e~\ref{fig:avulsion_check} ilustram a reprodução visual dos cenários da baseline e dos operadores topológicos.
+Na etapa de verificação funcional (\texttt{Tests/lithology\_regression.cpp}), a execução de $50$ passos com \texttt{seed = 1234} confirmou paridade numérica entre a baseline e a variante uniforme ($E=1{,}0$) com erro máximo $L_\infty < 10^{-9}$, além de alteração efetiva da trajetória sob campo heterogêneo ($L_\infty > 10^{-6}$) sem geração de valores inválidos (\texttt{NaN}).
 
-\begin{table}[t]
-\caption{Validação preliminar entre a baseline e as configurações da extensão litológica ($50$ passos, grade $256 \times 256$, \texttt{seed = 1234}).}
+A Tabela~\ref{tab:resultado} apresenta os resultados preliminares do benchmark comparativo (\texttt{Benchmarks/}) executado em ambiente Linux x86\_64 com compilador \texttt{g++ 16.2.1} (\texttt{-std=c++17 -O2}). Foram avaliadas três variantes (\texttt{original} no commit \texttt{c86c93a}, \texttt{modificado\_neutro} com $E=1{,}0$ e \texttt{modificado\_litologico} com faixas $E \in \{0{,}25,\, 1{,}0,\, 1{,}75\}$) ao longo de quatro cenários, totalizando $100$ repetições por combinação distribuídas ciclicamente entre as sementes \texttt{1234}, \texttt{4321} e \texttt{9999}. As Figuras~\ref{fig:comparacao} e~\ref{fig:avulsion_check} ilustram as saídas visuais reproduzidas nos cenários de referência.
+
+\begin{table*}[t]
+\caption{Resultados preliminares do benchmark comparativo ($100$ repetições por combinação, sementes \texttt{1234}, \texttt{4321} e \texttt{9999}). Tempos de execução medidos via \texttt{std::chrono::steady\_clock} exclusivamente durante os passos da simulação.}
 \label{tab:resultado}
 \centering
 \scriptsize
-\begin{tabular}{lccc}
+\begin{tabular}{llrrrrrrr}
 \toprule
-Configuração & Desvio máx. vs. Baseline ($L_\infty$) & Vértices c/ \texttt{NaN} & Status \\
+Cenário & Variante & Mediana (ms) & p95 (ms) & Passo (ms) & Overhead vs. Orig. & Sinuosidade ($\mu \pm \sigma$) & Desloc. Máx. (m) & \texttt{NaN} \\
 \midrule
-Baseline (sem $E$) & $0{,}0$ & $0$ & Referência \\
-Extensão Uniforme ($E=1{,}0$) & $< 10^{-9}$ & $0$ & Aprovado \\
-Extensão Heterogênea ($0{,}25 / 1{,}75$) & $> 10^{-6}$ (trajetória alterada) & $0$ & Aprovado \\
+\texttt{plano\_500} & \texttt{original} & 558,40 & 596,45 & 1,12 & 0,00\% & $2{,}121 \pm 0{,}306$ & 5615,88 & 0 \\
+\texttt{plano\_500} & \texttt{modificado\_neutro} & 570,33 & 622,05 & 1,14 & +2,14\% & $2{,}121 \pm 0{,}306$ & 5615,88 & 0 \\
+\texttt{plano\_500} & \texttt{modificado\_litologico} & 569,60 & 624,31 & 1,14 & +2,00\% & $2{,}121 \pm 0{,}306$ & 5615,88 & 0 \\
+\midrule
+\texttt{litologia\_500} & \texttt{original} & 562,78 & 618,05 & 1,13 & 0,00\% & $2{,}121 \pm 0{,}306$ & 5615,88 & 0 \\
+\texttt{litologia\_500} & \texttt{modificado\_neutro} & 574,07 & 624,56 & 1,15 & +2,01\% & $2{,}121 \pm 0{,}306$ & 5615,88 & 0 \\
+\texttt{litologia\_500} & \texttt{modificado\_litologico} & 571,64 & 621,31 & 1,14 & +1,57\% & $2{,}121 \pm 0{,}306$ & 5615,88 & 0 \\
+\midrule
+\texttt{avulsao\_750} & \texttt{original} & 1040,44 & 1125,41 & 1,39 & 0,00\% & $2{,}808 \pm 0{,}398$ & 6792,39 & 0 \\
+\texttt{avulsao\_750} & \texttt{modificado\_neutro} & 1037,03 & 1123,35 & 1,38 & $-0{,}33\%$ & $2{,}865 \pm 0{,}321$ & 7059,98 & 0 \\
+\texttt{avulsao\_750} & \texttt{modificado\_litologico} & 1053,40 & 1132,89 & 1,40 & +1,25\% & $2{,}865 \pm 0{,}321$ & 7059,98 & 0 \\
+\midrule
+\texttt{terreno\_1200} & \texttt{original} & 3116,97 & 4329,82 & 2,60 & 0,00\% & $3{,}401 \pm 0{,}417$ & 9336,78 & 0 \\
+\texttt{terreno\_1200} & \texttt{modificado\_neutro} & 3009,35 & 4270,26 & 2,51 & $-3{,}45\%$ & $3{,}119 \pm 0{,}075$ & 8537,32 & 0 \\
+\texttt{terreno\_1200} & \texttt{modificado\_litologico} & 3561,64 & 3860,26 & 2,97 & +14,27\% & $2{,}929 \pm 0{,}280$ & 7828,93 & 0 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \begin{figure}[t]
 \centering
