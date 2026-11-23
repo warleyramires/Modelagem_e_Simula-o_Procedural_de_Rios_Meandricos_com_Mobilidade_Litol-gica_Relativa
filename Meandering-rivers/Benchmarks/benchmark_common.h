@@ -27,6 +27,8 @@ inline int ScenarioSteps(const std::string& scenario)
 		return 500;
 	if (scenario == "terreno_1200")
 		return 1200;
+	if (scenario == "relevo_litologia_1000")
+		return 1000;
 	if (scenario == "avulsao_750")
 		return 750;
 	return 0;
@@ -34,7 +36,7 @@ inline int ScenarioSteps(const std::string& scenario)
 
 inline std::vector<Vector2> InitialPoints(const std::string& scenario)
 {
-	if (scenario == "terreno_1200")
+	if (scenario == "terreno_1200" || scenario == "relevo_litologia_1000")
 	{
 		return
 		{
@@ -52,7 +54,7 @@ inline std::vector<Vector2> InitialPoints(const std::string& scenario)
 inline ScalarField2D BuildTerrain(const std::string& scenario)
 {
 	ScalarField2D terrain(256, 256, Box2D(Vector2(0.0), 10000.0), 0.0);
-	if (scenario != "terreno_1200")
+	if (scenario != "terreno_1200" && scenario != "relevo_litologia_1000")
 		return terrain;
 
 	const Box2D box = terrain.GetBox();
@@ -63,7 +65,10 @@ inline ScalarField2D BuildTerrain(const std::string& scenario)
 		{
 			const double y = box[0].y + (box[1].y - box[0].y) * double(j) / 255.0;
 			const double height = 400.0
-				+ 250.0 * std::sin(x / 1800.0) * std::cos(y / 2200.0);
+				+ 250.0 * std::sin(x / 1800.0) * std::cos(y / 2200.0)
+				+ (scenario == "relevo_litologia_1000"
+					? 120.0 * std::sin((x + y) / 900.0)
+					: 0.0);
 			terrain.Set(i, j, height);
 		}
 	}

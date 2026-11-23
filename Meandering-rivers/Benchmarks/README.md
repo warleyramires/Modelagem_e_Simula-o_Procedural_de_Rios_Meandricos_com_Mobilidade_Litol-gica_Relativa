@@ -16,6 +16,12 @@ equipe de Warley Ramires, Alberto Henrique e Pedro Henrique Braga.
 - `terreno_1200`: relevo sintético e 1200 passos.
 - `avulsao_750`: 700 passos, duas avulsões e mais 50 passos.
 - `litologia_500`: terreno plano, campo litológico heterogêneo e 500 passos.
+- `relevo_litologia_1000`: relevo ondulado, campo litológico heterogêneo e 1000 passos.
+
+`plano_500` e `litologia_500` são mantidos como controles isolados: ambos usam
+terreno plano, mas o segundo ativa zonas litológicas. O cenário
+`relevo_litologia_1000` cobre a interação entre relevo e litologia, que não era
+avaliada pelos dois cenários planos.
 
 Cada cenário/variante possui 100 repetições. As sementes `1234`, `4321` e
 `9999` são distribuídas ciclicamente entre as repetições. A geometria inicial,
@@ -35,6 +41,11 @@ São coletados:
 - deslocamento lateral máximo;
 - quantidade final de pontos;
 - ocorrência de valores inválidos.
+
+O relatório também classifica o custo: até 5% é considerado compatível; acima
+de 5%, o custo precisa ser justificado por uma melhoria ou diferença geométrica
+relevante. Essa classificação não reprova automaticamente o cenário, pois a
+extensão pode ser mais lenta e ainda produzir um resultado mais realista.
 
 ## Execução
 

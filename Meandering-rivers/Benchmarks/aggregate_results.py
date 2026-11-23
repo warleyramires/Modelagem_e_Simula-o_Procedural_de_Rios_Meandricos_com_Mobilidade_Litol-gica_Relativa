@@ -46,6 +46,14 @@ def main():
         for (variant, scenario), rows in groups.items()
         if variant == "modificado_neutro"
     }
+    original_geometry = {
+        scenario: {
+            "sinuosity": statistics.mean(float(row["final_sinuosity"]) for row in rows),
+            "displacement": statistics.mean(float(row["max_lateral_displacement"]) for row in rows),
+        }
+        for (variant, scenario), rows in groups.items()
+        if variant == "original"
+    }
     summary_rows = []
     for (variant, scenario), rows in sorted(groups.items()):
         times = [float(row["total_time_ns"]) for row in rows]
@@ -79,6 +87,24 @@ def main():
             "invalid_values_total": sum(int(row["invalid_values"]) for row in rows),
         })
 
+    for row in summary_rows:
+        reference = original_geometry[row["scenario"]]
+        row["sinuosity_delta_vs_original_percent"] = (
+            100.0 * (row["final_sinuosity_mean"] - reference["sinuosity"])
+            / max(abs(reference["sinuosity"]), 1.0e-12)
+        )
+        row["displacement_delta_vs_original_percent"] = (
+            100.0 * (row["max_lateral_displacement_mean"] - reference["displacement"])
+            / max(abs(reference["displacement"]), 1.0e-12)
+        )
+        overhead = abs(row["overhead_vs_original_percent"])
+        if row["variant"] == "original":
+            row["performance_class"] = "baseline"
+        elif overhead <= 5.0:
+            row["performance_class"] = "dentro do limite de 5%"
+        else:
+            row["performance_class"] = "justificar com ganho de qualidade"
+
     fieldnames = list(summary_rows[0].keys())
     with open(summary_path, "w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -92,7 +118,9 @@ def main():
         handle.write("| Campo | Valor |\n| --- | --- |\n")
         for key, value in environment.items():
             handle.write(f"| `{key}` | `{value}` |\n")
-        handle.write("\nForam usadas três variantes, quatro cenários e 100 repetições por combinação.\n")
+        scenario_count = len({scenario for _, scenario in groups})
+        repetition_count = max(len(rows) for rows in groups.values())
+        handle.write(f"\nForam usadas três variantes, {scenario_count} cenários e {repetition_count} repetições por combinação.\n")
         handle.write("Os tempos estão em nanossegundos e foram medidos apenas durante os passos da simulação.\n\n")
 
         handle.write("## Resultados de tempo\n\n")
@@ -119,11 +147,24 @@ def main():
                 f"{row['invalid_values_total']} |\n"
             )
 
+        handle.write("\n## Critério de desempenho e qualidade\n\n")
+        handle.write("O limite de 5% é um critério de custo, não uma reprovação automática. Até 5% indica custo compatível. Acima de 5%, a extensão precisa ser justificada por ganho ou diferença geométrica relevante, especialmente em dados reais.\n\n")
+        handle.write("| Variante | Cenário | Overhead vs original | Variação da sinuosidade | Variação do deslocamento | Classificação |\n")
+        handle.write("| --- | --- | ---: | ---: | ---: | --- |\n")
+        for row in summary_rows:
+            handle.write(
+                f"| {row['variant']} | {row['scenario']} | {row['overhead_vs_original_percent']:.2f}% | "
+                f"{row['sinuosity_delta_vs_original_percent']:.2f}% | "
+                f"{row['displacement_delta_vs_original_percent']:.2f}% | "
+                f"{row['performance_class']} |\n"
+            )
+
         handle.write("\n## Interpretação\n\n")
         handle.write("- `modificado_neutro` mede o custo estrutural da extensão quando `E=1`.\n")
         handle.write("- `modificado_litologico` mede o custo adicional das consultas e da modulação espacial.\n")
         handle.write("- O overhead é calculado pela mediana em relação à variante `original` do mesmo cenário.\n")
         handle.write("- O overhead contra `modificado_neutro` isola o custo da litologia.\n")
+        handle.write("- Diferenças geométricas não são automaticamente melhorias; em dados reais devem ser comparadas ao traçado ou relevo de referência.\n")
         handle.write("- Os CSVs bruto e resumido permitem reproduzir as tabelas sem executar novamente o benchmark.\n")
 
     return 0

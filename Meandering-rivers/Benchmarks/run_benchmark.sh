@@ -56,13 +56,13 @@ printf '%s\n' "system,$(uname -srmo)" >> "$ENVIRONMENT"
 "$TEMP/benchmark_original" plano_500 "$REPETITIONS" > "$TEMP/original.csv"
 head -n 1 "$TEMP/original.csv" > "$RAW"
 tail -n +2 "$TEMP/original.csv" >> "$RAW"
-for scenario in terreno_1200 avulsao_750 litologia_500; do
+for scenario in terreno_1200 relevo_litologia_1000 avulsao_750 litologia_500; do
 	"$TEMP/benchmark_original" "$scenario" "$REPETITIONS" > "$TEMP/original.csv"
 	tail -n +2 "$TEMP/original.csv" >> "$RAW"
 done
 
 for variant in modificado_neutro modificado_litologico; do
-	for scenario in plano_500 terreno_1200 avulsao_750 litologia_500; do
+	for scenario in plano_500 terreno_1200 relevo_litologia_1000 avulsao_750 litologia_500; do
 		"$TEMP/benchmark_modificado" "$variant" "$scenario" "$REPETITIONS" > "$TEMP/modified.csv"
 		tail -n +2 "$TEMP/modified.csv" >> "$RAW"
 	done
