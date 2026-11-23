@@ -107,7 +107,7 @@ def main():
 
     fieldnames = list(summary_rows[0].keys())
     with open(summary_path, "w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(summary_rows)
 

@@ -63,6 +63,10 @@ g++ -std=c++17 -O2 -ICode/Include Tests/lithology_regression.cpp \
 O teste verifica que um campo uniforme reproduz a baseline e que um campo
 heterogêneo modifica a trajetória sem produzir valores inválidos.
 
+O planejamento de duas semanas, a divisão entre Pedro e Alberto e os critérios
+de aceitação estão em
+[Docs/CRONOGRAMA_2_SEMANAS.md](Docs/CRONOGRAMA_2_SEMANAS.md).
+
 Para validar a execução com um heightfield em PNG, compile e execute:
 
 ```sh
@@ -98,6 +102,10 @@ Os dados brutos, o resumo estatístico e o relatório estão em
 `Benchmarks/results/`. O relatório separa o custo estrutural da extensão do
 custo adicional das consultas litológicas. A metodologia detalhada está em
 [Benchmarks/README.md](Benchmarks/README.md).
+
+O benchmark também inclui o cenário `relevo_litologia_1000`, que combina
+relevo ondulado e campo litológico heterogêneo. Os cenários planos continuam
+como controles isolados, não como substitutos de um experimento real.
 
 ## Uso do campo litológico
 
