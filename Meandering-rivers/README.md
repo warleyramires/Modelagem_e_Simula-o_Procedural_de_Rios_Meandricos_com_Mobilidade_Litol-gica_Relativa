@@ -63,6 +63,21 @@ g++ -std=c++17 -O2 -ICode/Include Tests/lithology_regression.cpp \
 O teste verifica que um campo uniforme reproduz a baseline e que um campo
 heterogêneo modifica a trajetória sem produzir valores inválidos.
 
+Para validar a execução com um heightfield em PNG, compile e execute:
+
+```sh
+g++ -std=c++17 -O2 -ICode/Include Tests/resource_terrain_regression.cpp \
+  Code/Source/cubic-curve-set.cpp Code/Source/cubic-curve.cpp \
+  Code/Source/cubic.cpp Code/Source/linear.cpp \
+  Code/Source/meanders-channel.cpp Code/Source/meanders-simulation.cpp \
+  Code/Source/quadric.cpp -o /tmp/resource_terrain_regression
+/tmp/resource_terrain_regression Resources/hf.png
+```
+
+O teste aceita qualquer PNG em escala de cinza com um heightfield compatível.
+Para um experimento com rio real, o arquivo deve ser substituído por um DEM
+real documentado, mantendo a mesma conversão para o campo de elevação.
+
 ## Benchmark comparativo
 
 O benchmark reproduz a baseline original do commit `c86c93a` e compara três
