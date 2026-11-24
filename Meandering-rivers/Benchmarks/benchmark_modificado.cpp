@@ -13,18 +13,18 @@ static int SeedForRepeat(int repeat)
 
 int main(int argc, char** argv)
 {
-	if (argc != 4)
+	if (argc != 5)
 	{
-		std::cerr << "uso: benchmark_modificado <variante> <cenario> <repeticoes>\n";
+		std::cerr << "uso: benchmark_modificado <variante> <cenario> <passos> <repeticoes>\n";
 		return 2;
 	}
 
 	const std::string variant = argv[1];
 	const std::string scenario = argv[2];
-	const int repetitions = std::stoi(argv[3]);
-	const int steps = ScenarioSteps(scenario);
+	const int steps = std::stoi(argv[3]);
+	const int repetitions = std::stoi(argv[4]);
 	if ((variant != "modificado_neutro" && variant != "modificado_litologico")
-		|| steps == 0 || repetitions <= 0)
+		|| !IsKnownScenario(scenario) || steps <= 0 || repetitions <= 0)
 		return 2;
 
 	WriteCsvHeader(std::cout);
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 		if (simulation.Channels().empty())
 			return 3;
 		Channel finalChannel = simulation.Channels().at(0);
-		WriteCsvRow(std::cout, variant, scenario, seed, repeat,
+		WriteCsvRow(std::cout, variant, scenario, steps, seed, repeat,
 			MeasureChannel(finalChannel, initialPoints, elapsedNs, steps));
 	}
 	return 0;

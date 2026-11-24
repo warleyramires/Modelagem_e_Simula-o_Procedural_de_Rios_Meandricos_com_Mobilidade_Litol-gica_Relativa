@@ -53,20 +53,50 @@ printf '%s\n' "compiler,$(g++ --version | head -n 1)" >> "$ENVIRONMENT"
 printf '%s\n' "flags,-std=c++17 -O2" >> "$ENVIRONMENT"
 printf '%s\n' "system,$(uname -srmo)" >> "$ENVIRONMENT"
 
-"$TEMP/benchmark_original" plano_500 "$REPETITIONS" > "$TEMP/original.csv"
-head -n 1 "$TEMP/original.csv" > "$RAW"
-tail -n +2 "$TEMP/original.csv" >> "$RAW"
-for scenario in terreno_1200 relevo_litologia_1000 avulsao_750 litologia_500; do
-	"$TEMP/benchmark_original" "$scenario" "$REPETITIONS" > "$TEMP/original.csv"
-	tail -n +2 "$TEMP/original.csv" >> "$RAW"
-done
+SCENARIOS=(plano litologia_plana terreno relevo_litologia avulsao)
+STEPS=(500 750 1000 1500)
+: > "$TEMP/original-all.csv"
+first_original=1
 
-for variant in modificado_neutro modificado_litologico; do
-	for scenario in plano_500 terreno_1200 relevo_litologia_1000 avulsao_750 litologia_500; do
-		"$TEMP/benchmark_modificado" "$variant" "$scenario" "$REPETITIONS" > "$TEMP/modified.csv"
-		tail -n +2 "$TEMP/modified.csv" >> "$RAW"
+for scenario in "${SCENARIOS[@]}"; do
+	for steps in "${STEPS[@]}"; do
+		"$TEMP/benchmark_original" "$scenario" "$steps" "$REPETITIONS" > "$TEMP/original.csv"
+		if [[ "$first_original" -eq 1 ]]; then
+			cat "$TEMP/original.csv" >> "$TEMP/original-all.csv"
+			first_original=0
+		else
+			tail -n +2 "$TEMP/original.csv" >> "$TEMP/original-all.csv"
+		fi
 	done
 done
+
+head -n 1 "$TEMP/original-all.csv" > "$RAW"
+tail -n +2 "$TEMP/original-all.csv" >> "$RAW"
+
+for variant in modificado_neutro modificado_litologico; do
+	if [[ ! -f "$TEMP/modified-all.csv" ]]; then
+		: > "$TEMP/modified-all.csv"
+	fi
+	if [[ ! -f "$TEMP/modified-header-written" ]]; then
+		first_modified=1
+	else
+		first_modified=0
+	fi
+	for scenario in "${SCENARIOS[@]}"; do
+		for steps in "${STEPS[@]}"; do
+			"$TEMP/benchmark_modificado" "$variant" "$scenario" "$steps" "$REPETITIONS" > "$TEMP/modified.csv"
+			if [[ "$first_modified" -eq 1 ]]; then
+				cat "$TEMP/modified.csv" >> "$TEMP/modified-all.csv"
+				touch "$TEMP/modified-header-written"
+				first_modified=0
+			else
+				tail -n +2 "$TEMP/modified.csv" >> "$TEMP/modified-all.csv"
+			fi
+		done
+	done
+done
+
+tail -n +2 "$TEMP/modified-all.csv" >> "$RAW"
 
 python3 "$ROOT/Benchmarks/aggregate_results.py" \
 	"$RAW" \

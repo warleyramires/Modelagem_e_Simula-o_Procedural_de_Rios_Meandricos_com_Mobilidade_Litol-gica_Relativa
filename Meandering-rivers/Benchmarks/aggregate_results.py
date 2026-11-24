@@ -34,39 +34,40 @@ def main():
     groups = defaultdict(list)
     with open(raw_path, newline="", encoding="utf-8") as handle:
         for row in csv.DictReader(handle):
-            groups[(row["variant"], row["scenario"])].append(row)
+            groups[(row["variant"], row["scenario"], int(row["steps"]))].append(row)
 
     original_times = {
-        scenario: statistics.median(float(row["total_time_ns"]) for row in rows)
-        for (variant, scenario), rows in groups.items()
+        (scenario, steps): statistics.median(float(row["total_time_ns"]) for row in rows)
+        for (variant, scenario, steps), rows in groups.items()
         if variant == "original"
     }
     neutral_times = {
-        scenario: statistics.median(float(row["total_time_ns"]) for row in rows)
-        for (variant, scenario), rows in groups.items()
+        (scenario, steps): statistics.median(float(row["total_time_ns"]) for row in rows)
+        for (variant, scenario, steps), rows in groups.items()
         if variant == "modificado_neutro"
     }
     original_geometry = {
-        scenario: {
+        (scenario, steps): {
             "sinuosity": statistics.mean(float(row["final_sinuosity"]) for row in rows),
             "displacement": statistics.mean(float(row["max_lateral_displacement"]) for row in rows),
         }
-        for (variant, scenario), rows in groups.items()
+        for (variant, scenario, steps), rows in groups.items()
         if variant == "original"
     }
     summary_rows = []
-    for (variant, scenario), rows in sorted(groups.items()):
+    for (variant, scenario, steps), rows in sorted(groups.items()):
         times = [float(row["total_time_ns"]) for row in rows]
         time_per_step = [float(row["time_per_step_ns"]) for row in rows]
         sinuosity = [float(row["final_sinuosity"]) for row in rows]
         displacement = [float(row["max_lateral_displacement"]) for row in rows]
         time_mean, time_std = mean_std(times)
         sinuosity_mean, sinuosity_std = mean_std(sinuosity)
-        baseline = original_times[scenario]
+        baseline = original_times[(scenario, steps)]
         median = statistics.median(times)
         summary_rows.append({
             "variant": variant,
             "scenario": scenario,
+            "steps": steps,
             "samples": len(rows),
             "time_median_ns": median,
             "time_mean_ns": time_mean,
@@ -78,8 +79,8 @@ def main():
             "overhead_vs_original_percent": 100.0 * (median - baseline) / baseline,
             "speedup_vs_original": baseline / median,
             "overhead_vs_neutral_percent": (
-                100.0 * (median - neutral_times[scenario]) / neutral_times[scenario]
-                if scenario in neutral_times else ""
+                100.0 * (median - neutral_times[(scenario, steps)]) / neutral_times[(scenario, steps)]
+                if (scenario, steps) in neutral_times else ""
             ),
             "final_sinuosity_mean": sinuosity_mean,
             "final_sinuosity_stddev": sinuosity_std,
@@ -88,7 +89,7 @@ def main():
         })
 
     for row in summary_rows:
-        reference = original_geometry[row["scenario"]]
+        reference = original_geometry[(row["scenario"], row["steps"])]
         row["sinuosity_delta_vs_original_percent"] = (
             100.0 * (row["final_sinuosity_mean"] - reference["sinuosity"])
             / max(abs(reference["sinuosity"]), 1.0e-12)
@@ -118,19 +119,20 @@ def main():
         handle.write("| Campo | Valor |\n| --- | --- |\n")
         for key, value in environment.items():
             handle.write(f"| `{key}` | `{value}` |\n")
-        scenario_count = len({scenario for _, scenario in groups})
+        scenario_count = len({scenario for _, scenario, _ in groups})
+        step_count = len({steps for _, _, steps in groups})
         repetition_count = max(len(rows) for rows in groups.values())
-        handle.write(f"\nForam usadas três variantes, {scenario_count} cenários e {repetition_count} repetições por combinação.\n")
+        handle.write(f"\nForam usadas três variantes, {scenario_count} cenários, {step_count} quantidades de passos e {repetition_count} repetições por combinação.\n")
         handle.write("Os tempos estão em nanossegundos e foram medidos apenas durante os passos da simulação.\n\n")
 
         handle.write("## Resultados de tempo\n\n")
-        handle.write("| Variante | Cenário | Amostras | Mediana (ns) | p95 (ns) | Desvio (ns) | Overhead vs original | Overhead vs neutro | Speedup |\n")
-        handle.write("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |\n")
+        handle.write("| Variante | Cenário | Passos | Amostras | Mediana (ns) | p95 (ns) | Desvio (ns) | Overhead vs original | Overhead vs neutro | Speedup |\n")
+        handle.write("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |\n")
         for row in summary_rows:
             neutral_overhead = row["overhead_vs_neutral_percent"]
             neutral_display = "" if neutral_overhead == "" else f"{neutral_overhead:.2f}%"
             handle.write(
-                f"| {row['variant']} | {row['scenario']} | {row['samples']} | "
+                f"| {row['variant']} | {row['scenario']} | {row['steps']} | {row['samples']} | "
                 f"{row['time_median_ns']:.2f} | {row['time_p95_ns']:.2f} | "
                 f"{row['time_stddev_ns']:.2f} | {row['overhead_vs_original_percent']:.2f}% | "
                 f"{neutral_display} | "
@@ -138,22 +140,22 @@ def main():
             )
 
         handle.write("\n## Resultados geométricos\n\n")
-        handle.write("| Variante | Cenário | Sinuosidade média | Desvio da sinuosidade | Deslocamento lateral médio | Valores inválidos |\n")
-        handle.write("| --- | --- | ---: | ---: | ---: | ---: |\n")
+        handle.write("| Variante | Cenário | Passos | Sinuosidade média | Desvio da sinuosidade | Deslocamento lateral médio | Valores inválidos |\n")
+        handle.write("| --- | --- | ---: | ---: | ---: | ---: | ---: |\n")
         for row in summary_rows:
             handle.write(
-                f"| {row['variant']} | {row['scenario']} | {row['final_sinuosity_mean']:.8f} | "
+                f"| {row['variant']} | {row['scenario']} | {row['steps']} | {row['final_sinuosity_mean']:.8f} | "
                 f"{row['final_sinuosity_stddev']:.8f} | {row['max_lateral_displacement_mean']:.8f} | "
                 f"{row['invalid_values_total']} |\n"
             )
 
         handle.write("\n## Critério de desempenho e qualidade\n\n")
         handle.write("O limite de 5% é um critério de custo, não uma reprovação automática. Até 5% indica custo compatível. Acima de 5%, a extensão precisa ser justificada por ganho ou diferença geométrica relevante, especialmente em dados reais.\n\n")
-        handle.write("| Variante | Cenário | Overhead vs original | Variação da sinuosidade | Variação do deslocamento | Classificação |\n")
-        handle.write("| --- | --- | ---: | ---: | ---: | --- |\n")
+        handle.write("| Variante | Cenário | Passos | Overhead vs original | Variação da sinuosidade | Variação do deslocamento | Classificação |\n")
+        handle.write("| --- | --- | ---: | ---: | ---: | ---: | --- |\n")
         for row in summary_rows:
             handle.write(
-                f"| {row['variant']} | {row['scenario']} | {row['overhead_vs_original_percent']:.2f}% | "
+                f"| {row['variant']} | {row['scenario']} | {row['steps']} | {row['overhead_vs_original_percent']:.2f}% | "
                 f"{row['sinuosity_delta_vs_original_percent']:.2f}% | "
                 f"{row['displacement_delta_vs_original_percent']:.2f}% | "
                 f"{row['performance_class']} |\n"
