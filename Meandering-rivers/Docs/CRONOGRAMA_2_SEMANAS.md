@@ -9,7 +9,7 @@ O limite de 5% será usado como critério de custo. Um overhead maior pode ser
 aceito quando houver ganho geométrico ou maior realismo demonstrável; overhead
 alto sem melhoria observável exige otimização ou revisão.
 
-## Semana 1 — Testes e cenários
+## Semana 1 — Testes, cenários e matriz de iterações
 
 | Dia | Pedro | Alberto | Entrega |
 | --- | --- | --- | --- |
@@ -18,6 +18,10 @@ alto sem melhoria observável exige otimização ou revisão.
 | 3 | Testar margem externa e inflexão | Testar limites, fallback e valores inválidos | Cobertura de amostragem |
 | 4 | Integrar relevo e litologia | Criar zonas resistente/neutra/erodível | Cenário `relevo_litologia_1000` |
 | 5 | Alinhar entradas original/modificado | Conferir métricas e repetições | Benchmark reproduzível |
+
+Todos os cinco tipos de cenário serão executados com 500, 750, 1000 e 1500
+passos. O cenário de avulsão dispara as duas avulsões em 70% do total: 350,
+525, 700 e 1050 passos, respectivamente.
 
 ## Semana 2 — Dados, benchmark e documentação
 
@@ -39,7 +43,7 @@ alto sem melhoria observável exige otimização ou revisão.
 - Margem externa: consulta o lado externo da curva.
 - Inflexão: consulta e combina os dois lados.
 - Fora do domínio: usa mobilidade neutra sem gerar `NaN`.
-- Relevo e litologia: verifica interação entre os dois campos.
+- Relevo e litologia: verifica interação entre os dois campos em cada duração.
 - Avulsão com litologia: verifica estabilidade durante mudança de trajetória.
 - Terreno de referência real: verifica carregamento, execução e saída.
 

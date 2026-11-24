@@ -10,18 +10,18 @@ equipe de Warley Ramires, Alberto Henrique e Pedro Henrique Braga.
 - `modificado_litologico`: código atual com campo heterogêneo contendo zonas
   resistentes (`E=0.25`) e erodíveis (`E=1.75`).
 
-## Cenários
+## Cenários e iterações
 
-- `plano_500`: terreno plano e 500 passos.
-- `terreno_1200`: relevo sintético e 1200 passos.
-- `avulsao_750`: 700 passos, duas avulsões e mais 50 passos.
-- `litologia_500`: terreno plano, campo litológico heterogêneo e 500 passos.
-- `relevo_litologia_1000`: relevo ondulado, campo litológico heterogêneo e 1000 passos.
+- `plano`: terreno plano.
+- `litologia_plana`: terreno plano com campo litológico heterogêneo.
+- `terreno`: relevo sintético.
+- `relevo_litologia`: relevo ondulado com campo litológico heterogêneo.
+- `avulsao`: duas avulsões em 70% da simulação.
 
-`plano_500` e `litologia_500` são mantidos como controles isolados: ambos usam
-terreno plano, mas o segundo ativa zonas litológicas. O cenário
-`relevo_litologia_1000` cobre a interação entre relevo e litologia, que não era
-avaliada pelos dois cenários planos.
+Cada cenário é executado com 500, 750, 1000 e 1500 passos. `plano` e
+`litologia_plana` são controles isolados; `relevo_litologia` cobre a interação
+entre relevo e litologia. A quantidade de passos aparece explicitamente nos
+CSVs para impedir comparações entre execuções de durações diferentes.
 
 Cada cenário/variante possui 100 repetições. As sementes `1234`, `4321` e
 `9999` são distribuídas ciclicamente entre as repetições. A geometria inicial,
@@ -58,6 +58,13 @@ Os resultados são gerados em `Benchmarks/results/`:
 - `benchmark_raw.csv`: uma linha por execução;
 - `benchmark_summary.csv`: estatísticas agregadas;
 - `RELATORIO_BENCHMARK.md`: análise comparativa.
+
+Os executáveis também aceitam uma duração explícita:
+
+```sh
+./benchmark_original terreno 1000 10
+./benchmark_modificado modificado_litologico terreno 1000 10
+```
 
 O relatório separa o overhead estrutural (`modificado_neutro`), o custo da
 consulta litológica (`modificado_litologico` contra `modificado_neutro`) e o

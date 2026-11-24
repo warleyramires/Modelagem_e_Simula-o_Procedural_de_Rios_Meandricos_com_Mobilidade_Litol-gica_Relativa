@@ -85,14 +85,14 @@ real documentado, mantendo a mesma conversão para o campo de elevação.
 ## Benchmark comparativo
 
 O benchmark reproduz a baseline original do commit `c86c93a` e compara três
-variantes em quatro cenários:
+variantes em cinco cenários, cada um com 500, 750, 1000 e 1500 passos:
 
 - `original`;
 - `modificado_neutro`, com `E=1`;
 - `modificado_litologico`, com zonas resistentes e erodíveis.
 
-Cada combinação possui 100 repetições usando as sementes `1234`, `4321` e
-`9999`. Para executar novamente:
+Cada combinação usa as sementes `1234`, `4321` e `9999`. O número de
+repetições pode ser controlado pela variável `BENCHMARK_REPETITIONS`:
 
 ```sh
 ./Benchmarks/run_benchmark.sh
