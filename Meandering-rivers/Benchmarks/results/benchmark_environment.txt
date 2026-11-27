@@ -1,7 +1,7 @@
 benchmark_version,1
 baseline_commit,c86c93a
-modified_commit,e236d55ed004629318a29f9eb64971d8ff9ed592
-repetitions,1
-compiler,g++ (GCC) 16.2.1 20260810
+modified_commit,c8e26eb01e165ed62c35bea57e45a92e9aadf9b6
+repetitions,3
+compiler,g++ (Alpine 15.2.0) 15.2.0
 flags,-std=c++17 -O2
-system,Linux 7.3.4-1-cachyos x86_64 GNU/Linux
+system,Linux 6.18.58.1-microsoft-standard-WSL2 x86_64 Linux
