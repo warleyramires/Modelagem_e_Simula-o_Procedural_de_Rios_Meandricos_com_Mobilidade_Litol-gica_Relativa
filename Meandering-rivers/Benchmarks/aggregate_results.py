@@ -98,7 +98,7 @@ def main():
             100.0 * (row["max_lateral_displacement_mean"] - reference["displacement"])
             / max(abs(reference["displacement"]), 1.0e-12)
         )
-        overhead = abs(row["overhead_vs_original_percent"])
+        overhead = row["overhead_vs_original_percent"]
         if row["variant"] == "original":
             row["performance_class"] = "baseline"
         elif overhead <= 5.0:

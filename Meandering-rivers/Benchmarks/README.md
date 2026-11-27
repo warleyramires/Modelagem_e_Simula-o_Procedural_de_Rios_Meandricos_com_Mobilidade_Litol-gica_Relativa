@@ -12,8 +12,8 @@ equipe de Warley Ramires, Alberto Henrique e Pedro Henrique Braga.
 
 ## Cenários e iterações
 
-- `plano`: terreno plano.
-- `litologia_plana`: terreno plano com campo litológico heterogêneo.
+- `plano`: terreno plano com faixas litológicas laterais ao canal (corredor neutro central em `|y| <= 3000`).
+- `litologia_plana`: terreno plano com faixas litológicas transversais ao canal horizontal (`x < -3000` resistente, `x > 3000` erodível), eliminando redundância com `plano`.
 - `terreno`: relevo sintético.
 - `relevo_litologia`: relevo ondulado com campo litológico heterogêneo.
 - `avulsao`: duas avulsões em 70% da simulação.

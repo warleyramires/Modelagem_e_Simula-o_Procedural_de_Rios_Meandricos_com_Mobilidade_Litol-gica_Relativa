@@ -76,14 +76,29 @@ inline ScalarField2D BuildUniformLithology(const ScalarField2D& terrain)
 	return ScalarField2D(256, 256, terrain.GetBox(), 1.0);
 }
 
-inline ScalarField2D BuildHeterogeneousLithology(const ScalarField2D& terrain)
+inline ScalarField2D BuildHeterogeneousLithology(
+	const ScalarField2D& terrain,
+	const std::string& scenario = "")
 {
 	ScalarField2D field(256, 256, terrain.GetBox(), 1.0);
 	const Box2D box = field.GetBox();
+	if (scenario == "litologia_plana")
+	{
+		// In ScalarField2D::GetValueBilinear, index j maps to world X and i to world Y.
+		// Varying along j places resistant/neutral/erodible zones transversally across the horizontal channel.
+		for (int j = 0; j < field.SizeY(); j++)
+		{
+			const double x = box[0].x + (box[1].x - box[0].x) * double(j) / 255.0;
+			const double value = x < -3000.0 ? 0.25 : (x > 3000.0 ? 1.75 : 1.0);
+			for (int i = 0; i < field.SizeX(); i++)
+				field.Set(i, j, value);
+		}
+		return field;
+	}
 	for (int i = 0; i < field.SizeX(); i++)
 	{
-		const double x = box[0].x + (box[1].x - box[0].x) * double(i) / 255.0;
-		const double value = x < -3000.0 ? 0.25 : (x > 3000.0 ? 1.75 : 1.0);
+		const double coord = box[0].y + (box[1].y - box[0].y) * double(i) / 255.0;
+		const double value = coord < -3000.0 ? 0.25 : (coord > 3000.0 ? 1.75 : 1.0);
 		for (int j = 0; j < field.SizeY(); j++)
 			field.Set(i, j, value);
 	}

@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 		const int seed = SeedForRepeat(repeat);
 		const ScalarField2D terrain = BuildTerrain(scenario);
 		const ScalarField2D mobility = variant == "modificado_litologico"
-			? BuildHeterogeneousLithology(terrain)
+			? BuildHeterogeneousLithology(terrain, scenario)
 			: BuildUniformLithology(terrain);
 		MeanderSimulation simulation(seed, terrain, mobility);
 		simulation.AddChannel(Channel(InitialPoints(scenario), 50.0));
