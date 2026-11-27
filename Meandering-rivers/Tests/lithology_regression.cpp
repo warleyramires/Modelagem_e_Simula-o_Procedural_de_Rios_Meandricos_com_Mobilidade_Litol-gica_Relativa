@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <limits>
 #include <vector>
 
 static std::vector<Vector2> InitialPoints()
@@ -65,6 +66,39 @@ static ScalarField2D SplitLithology(const ScalarField2D& terrain,
 	return field;
 }
 
+static ScalarField2D SplitLithologyByRows(const ScalarField2D& terrain,
+	int splitRow, double lowRowValue, double highRowValue)
+{
+	ScalarField2D field(256, 256, terrain.GetBox(), 1.0);
+	for (int i = 0; i < field.SizeX(); i++)
+	{
+		const double value = i < splitRow ? lowRowValue : highRowValue;
+		for (int j = 0; j < field.SizeY(); j++)
+			field.Set(i, j, value);
+	}
+	return field;
+}
+
+static std::vector<Vector2> ShiftedPoints(double yOffset)
+{
+	std::vector<Vector2> pts = InitialPoints();
+	for (Vector2& p : pts)
+		p.y += yOffset;
+	return pts;
+}
+
+static MeanderSimulation MakeSimulationWithPoints(
+	const ScalarField2D& terrain,
+	const ScalarField2D* lithology,
+	const std::vector<Vector2>& pts)
+{
+	MeanderSimulation simulation = lithology
+		? MeanderSimulation(1234, terrain, *lithology)
+		: MeanderSimulation(1234, terrain);
+	simulation.AddChannel(Channel(pts, 50.0));
+	return simulation;
+}
+
 static bool HasFiniteChannel(const Channel& channel)
 {
 	for (int i = 0; i < channel.Size(); i++)
@@ -123,12 +157,87 @@ int main()
 		return 1;
 	}
 
-	const ScalarField2D neutralField = LithologyWithValue(terrain, 1.0);
-	MeanderSimulation inflection = MakeSimulation(terrain, &neutralField);
+	const ScalarField2D asymmetricInflection = SplitLithologyByRows(terrain, 128, 0.5, 1.5);
+	MeanderSimulation inflection = MakeSimulation(terrain, &asymmetricInflection);
 	inflection.Step(50);
 	if (!HasFiniteChannel(inflection.Channels().at(0)))
 	{
 		std::cerr << "inflection sampling produced invalid values\n";
+		return 1;
+	}
+
+	// Lower clamp limit (0.25): 0.01/1.0 must behave identically to 0.25/1.0 inside y < 0
+	const std::vector<Vector2> lowZonePoints = ShiftedPoints(-3000.0);
+	const ScalarField2D clampLowRef = SplitLithologyByRows(terrain, 128, 0.25, 1.75);
+	const ScalarField2D clampLowExtreme = SplitLithologyByRows(terrain, 128, 0.01, 1.99);
+	MeanderSimulation simLowRef = MakeSimulationWithPoints(terrain, &clampLowRef, lowZonePoints);
+	MeanderSimulation simLowExtreme = MakeSimulationWithPoints(terrain, &clampLowExtreme, lowZonePoints);
+	simLowRef.Step(10);
+	simLowExtreme.Step(10);
+	if (!HasFiniteChannel(simLowExtreme.Channels().at(0))
+		|| !SameChannel(simLowRef.Channels().at(0), simLowExtreme.Channels().at(0), 1.0e-9))
+	{
+		std::cerr << "lower clamp limit (0.25) regression failed\n";
+		return 1;
+	}
+
+	// Upper clamp limit (2.0): 3.1/1.0 must behave identically to 2.0/1.0 inside i < 64 (y < -5000)
+	const std::vector<Vector2> highZonePoints = ShiftedPoints(-7000.0);
+	const ScalarField2D clampHighRef = SplitLithologyByRows(terrain, 64, 2.0, 2.0 / 3.0);
+	const ScalarField2D clampHighExtreme = SplitLithologyByRows(terrain, 64, 3.1, 0.3);
+	MeanderSimulation simHighRef = MakeSimulationWithPoints(terrain, &clampHighRef, highZonePoints);
+	MeanderSimulation simHighExtreme = MakeSimulationWithPoints(terrain, &clampHighExtreme, highZonePoints);
+	simHighRef.Step(10);
+	simHighExtreme.Step(10);
+	if (!HasFiniteChannel(simHighExtreme.Channels().at(0))
+		|| !SameChannel(simHighRef.Channels().at(0), simHighExtreme.Channels().at(0), 1.0e-9))
+	{
+		std::cerr << "upper clamp limit (2.0) regression failed\n";
+		return 1;
+	}
+
+	// Out-of-domain fallback: lithology box outside channel must fall back to neutral mobility
+	ScalarField2D outsideField(16, 16, Box2D(Vector2(50000.0, 50000.0), 1000.0), 1.0);
+	for (int i = 0; i < outsideField.SizeX(); i++)
+		for (int j = 0; j < outsideField.SizeY(); j++)
+			outsideField.Set(i, j, i < 8 ? 0.25 : 1.75);
+	MeanderSimulation outsideSim = MakeSimulation(terrain, &outsideField);
+	outsideSim.Step(50);
+	if (!HasFiniteChannel(outsideSim.Channels().at(0))
+		|| !SameChannel(baseline.Channels().at(0), outsideSim.Channels().at(0), 1.0e-9))
+	{
+		std::cerr << "out-of-domain fallback regression failed\n";
+		return 1;
+	}
+
+	// Invalid values: zero field, negative cells with positive mean, and NaN cell
+	const ScalarField2D zeroField = LithologyWithValue(terrain, 0.0);
+	MeanderSimulation zeroSim = MakeSimulation(terrain, &zeroField);
+	zeroSim.Step(50);
+	if (!HasFiniteChannel(zeroSim.Channels().at(0))
+		|| !SameChannel(baseline.Channels().at(0), zeroSim.Channels().at(0), 1.0e-9))
+	{
+		std::cerr << "zero lithology field fallback failed\n";
+		return 1;
+	}
+
+	const ScalarField2D negativeField = SplitLithologyByRows(terrain, 128, -1.0, 5.0);
+	MeanderSimulation negativeSim = MakeSimulation(terrain, &negativeField);
+	negativeSim.Step(50);
+	if (!HasFiniteChannel(negativeSim.Channels().at(0)))
+	{
+		std::cerr << "negative lithology cells produced invalid values\n";
+		return 1;
+	}
+
+	ScalarField2D nanField = LithologyWithValue(terrain, 1.0);
+	nanField.Set(128, 128, std::numeric_limits<double>::quiet_NaN());
+	MeanderSimulation nanSim = MakeSimulation(terrain, &nanField);
+	nanSim.Step(50);
+	if (!HasFiniteChannel(nanSim.Channels().at(0))
+		|| !SameChannel(baseline.Channels().at(0), nanSim.Channels().at(0), 1.0e-9))
+	{
+		std::cerr << "NaN lithology field fallback failed\n";
 		return 1;
 	}
 
@@ -143,6 +252,6 @@ int main()
 		return 1;
 	}
 
-	std::cout << "lithology regression passed: e1, ordering, inflection, clear\n";
+	std::cout << "lithology regression passed: e1, ordering, inflection, clamp, fallback, invalid, clear\n";
 	return 0;
 }
