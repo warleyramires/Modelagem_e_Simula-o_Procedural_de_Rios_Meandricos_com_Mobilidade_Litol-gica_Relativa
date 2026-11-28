@@ -40,3 +40,5 @@ Temp/
 *.exe
 *.out
 *.app
+__pycache__/
+*.pyc
