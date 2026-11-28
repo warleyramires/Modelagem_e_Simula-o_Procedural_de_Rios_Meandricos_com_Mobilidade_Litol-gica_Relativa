@@ -6,144 +6,144 @@
 | --- | --- |
 | `benchmark_version` | `1` |
 | `baseline_commit` | `c86c93a` |
-| `modified_commit` | `c8e26eb01e165ed62c35bea57e45a92e9aadf9b6` |
-| `repetitions` | `3` |
-| `compiler` | `g++ (Alpine 15.2.0) 15.2.0` |
+| `modified_commit` | `22800c8abc91fe4b8f6a91457d13424760d2a8df` |
+| `repetitions` | `1` |
+| `compiler` | `g++ (GCC) 16.2.1 20260810` |
 | `flags` | `-std=c++17 -O2` |
-| `system` | `Linux 6.18.58.1-microsoft-standard-WSL2 x86_64 Linux` |
+| `system` | `Linux 7.3.4-1-cachyos x86_64 GNU/Linux` |
 
-Foram usadas três variantes, 5 cenários, 4 quantidades de passos e 3 repetições por combinação.
+Foram usadas três variantes, 5 cenários, 4 quantidades de passos e 1 repetições por combinação.
 Os tempos estão em nanossegundos e foram medidos apenas durante os passos da simulação.
 
 ## Resultados de tempo
 
 | Variante | Cenário | Passos | Amostras | Mediana (ns) | p95 (ns) | Desvio (ns) | Overhead vs original | Overhead vs neutro | Speedup |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| modificado_litologico | avulsao | 500 | 3 | 1704247884.00 | 1711170648.00 | 11330234.58 | -2.46% | -15.42% | 1.0252x |
-| modificado_litologico | avulsao | 750 | 3 | 3046220496.00 | 3128176835.00 | 158375629.34 | -2.53% | -15.01% | 1.0260x |
-| modificado_litologico | avulsao | 1000 | 3 | 4599145444.00 | 5373609069.00 | 376878314.80 | -4.71% | -11.32% | 1.0494x |
-| modificado_litologico | avulsao | 1500 | 3 | 9006472734.00 | 9995029394.00 | 730405509.66 | 2.91% | -0.41% | 0.9717x |
-| modificado_litologico | litologia_plana | 500 | 3 | 1952091155.00 | 1986279556.00 | 71026787.96 | 2.71% | 13.27% | 0.9737x |
-| modificado_litologico | litologia_plana | 750 | 3 | 3327149321.00 | 3538831229.00 | 106884531.19 | 1.04% | 4.31% | 0.9897x |
-| modificado_litologico | litologia_plana | 1000 | 3 | 4696819680.00 | 4713821631.00 | 20651629.72 | -16.94% | -6.35% | 1.2040x |
-| modificado_litologico | litologia_plana | 1500 | 3 | 7795853019.00 | 7954849765.00 | 178685692.17 | -15.95% | -8.02% | 1.1897x |
-| modificado_litologico | plano | 500 | 3 | 1842958122.00 | 1950872732.00 | 58073340.25 | -13.30% | 7.39% | 1.1534x |
-| modificado_litologico | plano | 750 | 3 | 3400043045.00 | 3512300732.00 | 122803301.15 | -5.85% | 5.63% | 1.0621x |
-| modificado_litologico | plano | 1000 | 3 | 5357606629.00 | 5977424181.00 | 355781060.27 | 1.07% | 6.86% | 0.9895x |
-| modificado_litologico | plano | 1500 | 3 | 8637054604.00 | 8940483793.00 | 425957590.85 | -9.19% | 4.69% | 1.1012x |
-| modificado_litologico | relevo_litologia | 500 | 3 | 3134704741.00 | 6063743327.00 | 1551994508.32 | 24.40% | 21.09% | 0.8039x |
-| modificado_litologico | relevo_litologia | 750 | 3 | 5500316464.00 | 8190438227.00 | 1340918627.05 | 9.51% | 7.80% | 0.9131x |
-| modificado_litologico | relevo_litologia | 1000 | 3 | 8194787212.00 | 10860083569.00 | 1295990034.38 | 5.78% | 6.37% | 0.9454x |
-| modificado_litologico | relevo_litologia | 1500 | 3 | 13577626637.00 | 16136712872.00 | 1281851352.70 | 2.85% | 2.97% | 0.9723x |
-| modificado_litologico | terreno | 500 | 3 | 3109400720.00 | 7746212872.00 | 2372278638.55 | 33.13% | 49.26% | 0.7512x |
-| modificado_litologico | terreno | 750 | 3 | 5285805762.00 | 10326991700.00 | 2592091556.27 | 14.04% | 19.52% | 0.8769x |
-| modificado_litologico | terreno | 1000 | 3 | 7885302255.00 | 12652480235.00 | 2629520672.54 | 3.47% | 0.01% | 0.9665x |
-| modificado_litologico | terreno | 1500 | 3 | 12929718564.00 | 17374373040.00 | 2145087639.44 | -7.17% | -11.05% | 1.0773x |
-| modificado_neutro | avulsao | 500 | 3 | 2014925262.00 | 2017755532.00 | 65482405.85 | 15.32% | 0.00% | 0.8671x |
-| modificado_neutro | avulsao | 750 | 3 | 3584149084.00 | 3778555163.00 | 120562869.62 | 14.68% | 0.00% | 0.8720x |
-| modificado_neutro | avulsao | 1000 | 3 | 5186156632.00 | 5784300688.00 | 356240744.19 | 7.46% | 0.00% | 0.9306x |
-| modificado_neutro | avulsao | 1500 | 3 | 9043307811.00 | 9519860432.00 | 525455930.97 | 3.34% | 0.00% | 0.9677x |
-| modificado_neutro | litologia_plana | 500 | 3 | 1723434246.00 | 1744543933.00 | 18061332.93 | -9.32% | 0.00% | 1.1028x |
-| modificado_neutro | litologia_plana | 750 | 3 | 3189688801.00 | 3355585044.00 | 138307996.74 | -3.13% | 0.00% | 1.0323x |
-| modificado_neutro | litologia_plana | 1000 | 3 | 5015443620.00 | 5474257118.00 | 282462650.40 | -11.31% | 0.00% | 1.1275x |
-| modificado_neutro | litologia_plana | 1500 | 3 | 8475361875.00 | 8901464475.00 | 349409942.97 | -8.62% | 0.00% | 1.0943x |
-| modificado_neutro | plano | 500 | 3 | 1716107625.00 | 1752894015.00 | 18903055.57 | -19.27% | 0.00% | 1.2387x |
-| modificado_neutro | plano | 750 | 3 | 3218927308.00 | 3311942356.00 | 52199596.61 | -10.86% | 0.00% | 1.1219x |
-| modificado_neutro | plano | 1000 | 3 | 5013838879.00 | 5406402507.00 | 299663172.44 | -5.42% | 0.00% | 1.0573x |
-| modificado_neutro | plano | 1500 | 3 | 8250306934.00 | 8950839485.00 | 356194095.42 | -13.26% | 0.00% | 1.1528x |
-| modificado_neutro | relevo_litologia | 500 | 3 | 2588659718.00 | 6244296247.00 | 1835165075.55 | 2.73% | 0.00% | 0.9735x |
-| modificado_neutro | relevo_litologia | 750 | 3 | 5102191911.00 | 9155585358.00 | 1989017394.71 | 1.59% | 0.00% | 0.9844x |
-| modificado_neutro | relevo_litologia | 1000 | 3 | 7704252520.00 | 11210323459.00 | 1815754047.81 | -0.55% | 0.00% | 1.0056x |
-| modificado_neutro | relevo_litologia | 1500 | 3 | 13185683111.00 | 19890693408.00 | 3361177468.78 | -0.12% | 0.00% | 1.0012x |
-| modificado_neutro | terreno | 500 | 3 | 2083256973.00 | 7425038078.00 | 2538859187.95 | -10.81% | 0.00% | 1.1212x |
-| modificado_neutro | terreno | 750 | 3 | 4422663285.00 | 11121634383.00 | 3224799584.97 | -4.58% | 0.00% | 1.0480x |
-| modificado_neutro | terreno | 1000 | 3 | 7884578781.00 | 13924971716.00 | 3071492919.44 | 3.46% | 0.00% | 0.9666x |
-| modificado_neutro | terreno | 1500 | 3 | 14536311613.00 | 22143191910.00 | 3821359360.50 | 4.36% | 0.00% | 0.9582x |
-| original | avulsao | 500 | 3 | 1747241868.00 | 1829988676.00 | 45560808.05 | 0.00% | -13.29% | 1.0000x |
-| original | avulsao | 750 | 3 | 3125301086.00 | 3153083807.00 | 149489305.28 | 0.00% | -12.80% | 1.0000x |
-| original | avulsao | 1000 | 3 | 4826251949.00 | 5748449487.00 | 488319338.50 | 0.00% | -6.94% | 1.0000x |
-| original | avulsao | 1500 | 3 | 8751434533.00 | 9134558701.00 | 185855667.19 | 0.00% | -3.23% | 1.0000x |
-| original | litologia_plana | 500 | 3 | 1900667394.00 | 2315917065.00 | 235343920.05 | 0.00% | 10.28% | 1.0000x |
-| original | litologia_plana | 750 | 3 | 3292775228.00 | 3421355582.00 | 94068032.12 | 0.00% | 3.23% | 1.0000x |
-| original | litologia_plana | 1000 | 3 | 5654826306.00 | 6088381573.00 | 253233663.80 | 0.00% | 12.75% | 1.0000x |
-| original | litologia_plana | 1500 | 3 | 9275010551.00 | 9731996626.00 | 385402577.45 | 0.00% | 9.43% | 1.0000x |
-| original | plano | 500 | 3 | 2125726357.00 | 2140539002.00 | 74873735.83 | 0.00% | 23.87% | 1.0000x |
-| original | plano | 750 | 3 | 3611284741.00 | 4017622822.00 | 244464424.28 | 0.00% | 12.19% | 1.0000x |
-| original | plano | 1000 | 3 | 5301138326.00 | 5634876261.00 | 207588587.49 | 0.00% | 5.73% | 1.0000x |
-| original | plano | 1500 | 3 | 9511138618.00 | 10257838787.00 | 531542623.18 | 0.00% | 15.28% | 1.0000x |
-| original | relevo_litologia | 500 | 3 | 2519931500.00 | 6418883608.00 | 1907220119.09 | 0.00% | -2.65% | 1.0000x |
-| original | relevo_litologia | 750 | 3 | 5022471113.00 | 8249040331.00 | 1764806347.20 | 0.00% | -1.56% | 1.0000x |
-| original | relevo_litologia | 1000 | 3 | 7747035009.00 | 11813450094.00 | 1970580574.07 | 0.00% | 0.56% | 1.0000x |
-| original | relevo_litologia | 1500 | 3 | 13201631622.00 | 18448919766.00 | 2901037125.46 | 0.00% | 0.12% | 1.0000x |
-| original | terreno | 500 | 3 | 2335675526.00 | 7907650394.00 | 2650205703.32 | 0.00% | 12.12% | 1.0000x |
-| original | terreno | 750 | 3 | 4634960728.00 | 11099221911.00 | 3069651712.95 | 0.00% | 4.80% | 1.0000x |
-| original | terreno | 1000 | 3 | 7621217519.00 | 13815468885.00 | 2938709962.54 | 0.00% | -3.34% | 1.0000x |
-| original | terreno | 1500 | 3 | 13928731904.00 | 21798296228.00 | 3879720022.43 | 0.00% | -4.18% | 1.0000x |
+| modificado_litologico | avulsao | 500 | 1 | 559474284.00 | 559474284.00 | 0.00 | 6.46% | 8.66% | 0.9393x |
+| modificado_litologico | avulsao | 750 | 1 | 1107752127.00 | 1107752127.00 | 0.00 | 7.03% | 3.80% | 0.9343x |
+| modificado_litologico | avulsao | 1000 | 1 | 1873771069.00 | 1873771069.00 | 0.00 | 14.03% | 6.14% | 0.8770x |
+| modificado_litologico | avulsao | 1500 | 1 | 3395420220.00 | 3395420220.00 | 0.00 | 5.82% | -2.51% | 0.9450x |
+| modificado_litologico | litologia_plana | 500 | 1 | 727916167.00 | 727916167.00 | 0.00 | 27.50% | 29.09% | 0.7843x |
+| modificado_litologico | litologia_plana | 750 | 1 | 1221087166.00 | 1221087166.00 | 0.00 | 18.20% | 14.15% | 0.8460x |
+| modificado_litologico | litologia_plana | 1000 | 1 | 1613968896.00 | 1613968896.00 | 0.00 | -2.98% | -10.25% | 1.0307x |
+| modificado_litologico | litologia_plana | 1500 | 1 | 3029280590.00 | 3029280590.00 | 0.00 | -0.77% | -15.10% | 1.0078x |
+| modificado_litologico | plano | 500 | 1 | 566531137.00 | 566531137.00 | 0.00 | 5.01% | -6.06% | 0.9523x |
+| modificado_litologico | plano | 750 | 1 | 1071433010.00 | 1071433010.00 | 0.00 | 7.00% | -1.45% | 0.9346x |
+| modificado_litologico | plano | 1000 | 1 | 1799454817.00 | 1799454817.00 | 0.00 | 9.55% | -0.60% | 0.9128x |
+| modificado_litologico | plano | 1500 | 1 | 3146645159.00 | 3146645159.00 | 0.00 | 2.14% | -9.24% | 0.9790x |
+| modificado_litologico | relevo_litologia | 500 | 1 | 1494976450.00 | 1494976450.00 | 0.00 | 13.02% | 13.02% | 0.8848x |
+| modificado_litologico | relevo_litologia | 750 | 1 | 2381875592.00 | 2381875592.00 | 0.00 | 17.34% | 15.66% | 0.8522x |
+| modificado_litologico | relevo_litologia | 1000 | 1 | 3114309311.00 | 3114309311.00 | 0.00 | 10.54% | 3.70% | 0.9047x |
+| modificado_litologico | relevo_litologia | 1500 | 1 | 4748610890.00 | 4748610890.00 | 0.00 | -9.91% | -14.98% | 1.1100x |
+| modificado_litologico | terreno | 500 | 1 | 1474277686.00 | 1474277686.00 | 0.00 | 15.37% | 9.10% | 0.8668x |
+| modificado_litologico | terreno | 750 | 1 | 2076666617.00 | 2076666617.00 | 0.00 | 4.47% | -0.28% | 0.9572x |
+| modificado_litologico | terreno | 1000 | 1 | 2961409720.00 | 2961409720.00 | 0.00 | -2.24% | -5.20% | 1.0229x |
+| modificado_litologico | terreno | 1500 | 1 | 4958364942.00 | 4958364942.00 | 0.00 | -13.17% | -11.59% | 1.1517x |
+| modificado_neutro | avulsao | 500 | 1 | 514874828.00 | 514874828.00 | 0.00 | -2.03% | 0.00% | 1.0207x |
+| modificado_neutro | avulsao | 750 | 1 | 1067231421.00 | 1067231421.00 | 0.00 | 3.12% | 0.00% | 0.9698x |
+| modificado_neutro | avulsao | 1000 | 1 | 1765397526.00 | 1765397526.00 | 0.00 | 7.44% | 0.00% | 0.9308x |
+| modificado_neutro | avulsao | 1500 | 1 | 3482714574.00 | 3482714574.00 | 0.00 | 8.54% | 0.00% | 0.9213x |
+| modificado_neutro | litologia_plana | 500 | 1 | 563897692.00 | 563897692.00 | 0.00 | -1.23% | 0.00% | 1.0124x |
+| modificado_neutro | litologia_plana | 750 | 1 | 1069723047.00 | 1069723047.00 | 0.00 | 3.55% | 0.00% | 0.9657x |
+| modificado_neutro | litologia_plana | 1000 | 1 | 1798283784.00 | 1798283784.00 | 0.00 | 8.10% | 0.00% | 0.9250x |
+| modificado_neutro | litologia_plana | 1500 | 1 | 3568261020.00 | 3568261020.00 | 0.00 | 16.88% | 0.00% | 0.8556x |
+| modificado_neutro | plano | 500 | 1 | 603103062.00 | 603103062.00 | 0.00 | 11.79% | 0.00% | 0.8946x |
+| modificado_neutro | plano | 750 | 1 | 1087205314.00 | 1087205314.00 | 0.00 | 8.58% | 0.00% | 0.9210x |
+| modificado_neutro | plano | 1000 | 1 | 1810327734.00 | 1810327734.00 | 0.00 | 10.22% | 0.00% | 0.9073x |
+| modificado_neutro | plano | 1500 | 1 | 3467089996.00 | 3467089996.00 | 0.00 | 12.54% | 0.00% | 0.8885x |
+| modificado_neutro | relevo_litologia | 500 | 1 | 1322713870.00 | 1322713870.00 | 0.00 | -0.00% | 0.00% | 1.0000x |
+| modificado_neutro | relevo_litologia | 750 | 1 | 2059392580.00 | 2059392580.00 | 0.00 | 1.45% | 0.00% | 0.9857x |
+| modificado_neutro | relevo_litologia | 1000 | 1 | 3003089911.00 | 3003089911.00 | 0.00 | 6.59% | 0.00% | 0.9382x |
+| modificado_neutro | relevo_litologia | 1500 | 1 | 5585279017.00 | 5585279017.00 | 0.00 | 5.96% | 0.00% | 0.9437x |
+| modificado_neutro | terreno | 500 | 1 | 1351277190.00 | 1351277190.00 | 0.00 | 5.74% | 0.00% | 0.9457x |
+| modificado_neutro | terreno | 750 | 1 | 2082543987.00 | 2082543987.00 | 0.00 | 4.76% | 0.00% | 0.9545x |
+| modificado_neutro | terreno | 1000 | 1 | 3123987107.00 | 3123987107.00 | 0.00 | 3.13% | 0.00% | 0.9696x |
+| modificado_neutro | terreno | 1500 | 1 | 5608111380.00 | 5608111380.00 | 0.00 | -1.80% | 0.00% | 1.0183x |
+| original | avulsao | 500 | 1 | 525528085.00 | 525528085.00 | 0.00 | 0.00% | 2.07% | 1.0000x |
+| original | avulsao | 750 | 1 | 1034968503.00 | 1034968503.00 | 0.00 | 0.00% | -3.02% | 1.0000x |
+| original | avulsao | 1000 | 1 | 1643218182.00 | 1643218182.00 | 0.00 | 0.00% | -6.92% | 1.0000x |
+| original | avulsao | 1500 | 1 | 3208647389.00 | 3208647389.00 | 0.00 | 0.00% | -7.87% | 1.0000x |
+| original | litologia_plana | 500 | 1 | 570898113.00 | 570898113.00 | 0.00 | 0.00% | 1.24% | 1.0000x |
+| original | litologia_plana | 750 | 1 | 1033060571.00 | 1033060571.00 | 0.00 | 0.00% | -3.43% | 1.0000x |
+| original | litologia_plana | 1000 | 1 | 1663483709.00 | 1663483709.00 | 0.00 | 0.00% | -7.50% | 1.0000x |
+| original | litologia_plana | 1500 | 1 | 3052934397.00 | 3052934397.00 | 0.00 | 0.00% | -14.44% | 1.0000x |
+| original | plano | 500 | 1 | 539511132.00 | 539511132.00 | 0.00 | 0.00% | -10.54% | 1.0000x |
+| original | plano | 750 | 1 | 1001338883.00 | 1001338883.00 | 0.00 | 0.00% | -7.90% | 1.0000x |
+| original | plano | 1000 | 1 | 1642528253.00 | 1642528253.00 | 0.00 | 0.00% | -9.27% | 1.0000x |
+| original | plano | 1500 | 1 | 3080675534.00 | 3080675534.00 | 0.00 | 0.00% | -11.15% | 1.0000x |
+| original | relevo_litologia | 500 | 1 | 1322773676.00 | 1322773676.00 | 0.00 | 0.00% | 0.00% | 1.0000x |
+| original | relevo_litologia | 750 | 1 | 2029932316.00 | 2029932316.00 | 0.00 | 0.00% | -1.43% | 1.0000x |
+| original | relevo_litologia | 1000 | 1 | 2817374520.00 | 2817374520.00 | 0.00 | 0.00% | -6.18% | 1.0000x |
+| original | relevo_litologia | 1500 | 1 | 5270987960.00 | 5270987960.00 | 0.00 | 0.00% | -5.63% | 1.0000x |
+| original | terreno | 500 | 1 | 1277867357.00 | 1277867357.00 | 0.00 | 0.00% | -5.43% | 1.0000x |
+| original | terreno | 750 | 1 | 1987873420.00 | 1987873420.00 | 0.00 | 0.00% | -4.55% | 1.0000x |
+| original | terreno | 1000 | 1 | 3029156609.00 | 3029156609.00 | 0.00 | 0.00% | -3.04% | 1.0000x |
+| original | terreno | 1500 | 1 | 5710640343.00 | 5710640343.00 | 0.00 | 0.00% | 1.83% | 1.0000x |
 
 ## Resultados geométricos
 
-| Variante | Cenário | Passos | Sinuosidade média | Desvio da sinuosidade | Deslocamento lateral médio | Valores inválidos |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| modificado_litologico | avulsao | 500 | 2.19090148 | 0.12456876 | 6030.22399434 | 0 |
-| modificado_litologico | avulsao | 750 | 2.69874420 | 0.15256518 | 7596.94807394 | 0 |
-| modificado_litologico | avulsao | 1000 | 2.81880471 | 0.45010948 | 6674.22357244 | 0 |
-| modificado_litologico | avulsao | 1500 | 2.61694354 | 0.14913908 | 6295.77547614 | 0 |
-| modificado_litologico | litologia_plana | 500 | 2.59012842 | 0.09101371 | 5844.99944383 | 0 |
-| modificado_litologico | litologia_plana | 750 | 2.59160100 | 0.09497664 | 5991.99173606 | 0 |
-| modificado_litologico | litologia_plana | 1000 | 2.86313571 | 0.33278984 | 6311.10620422 | 0 |
-| modificado_litologico | litologia_plana | 1500 | 2.71318368 | 0.25077054 | 6884.37373393 | 0 |
-| modificado_litologico | plano | 500 | 2.26236896 | 0.01194503 | 5989.28225912 | 0 |
-| modificado_litologico | plano | 750 | 2.92530517 | 0.48245060 | 7506.94292962 | 0 |
-| modificado_litologico | plano | 1000 | 3.06157468 | 0.28545319 | 7370.30702277 | 0 |
-| modificado_litologico | plano | 1500 | 2.68358004 | 0.23143415 | 6665.06957777 | 0 |
-| modificado_litologico | relevo_litologia | 500 | 2.60274098 | 0.12662190 | 7777.13674552 | 0 |
-| modificado_litologico | relevo_litologia | 750 | 2.79917775 | 0.26218939 | 7236.28322154 | 0 |
-| modificado_litologico | relevo_litologia | 1000 | 2.89563362 | 0.26097239 | 8474.27980822 | 0 |
-| modificado_litologico | relevo_litologia | 1500 | 3.02339815 | 0.26911992 | 9874.84872489 | 0 |
-| modificado_litologico | terreno | 500 | 2.43080689 | 0.30149775 | 7028.71901658 | 0 |
-| modificado_litologico | terreno | 750 | 2.40618076 | 0.26093494 | 7169.25427153 | 0 |
-| modificado_litologico | terreno | 1000 | 2.48210416 | 0.06629511 | 7317.23253712 | 0 |
-| modificado_litologico | terreno | 1500 | 2.77177040 | 0.27923646 | 7453.15529686 | 0 |
-| modificado_neutro | avulsao | 500 | 2.19090148 | 0.12456876 | 6030.22399434 | 0 |
-| modificado_neutro | avulsao | 750 | 2.69874420 | 0.15256518 | 7596.94807394 | 0 |
-| modificado_neutro | avulsao | 1000 | 2.71006218 | 0.36664052 | 6520.62197421 | 0 |
-| modificado_neutro | avulsao | 1500 | 2.92195029 | 0.19948095 | 7339.38024251 | 0 |
-| modificado_neutro | litologia_plana | 500 | 2.26236896 | 0.01194503 | 5989.28225912 | 0 |
-| modificado_neutro | litologia_plana | 750 | 2.92530517 | 0.48245060 | 7506.94292962 | 0 |
-| modificado_neutro | litologia_plana | 1000 | 2.69131417 | 0.38278833 | 6417.02563688 | 0 |
-| modificado_neutro | litologia_plana | 1500 | 2.72581004 | 0.29089206 | 7065.54153739 | 0 |
-| modificado_neutro | plano | 500 | 2.26236896 | 0.01194503 | 5989.28225912 | 0 |
-| modificado_neutro | plano | 750 | 2.92530517 | 0.48245060 | 7506.94292962 | 0 |
-| modificado_neutro | plano | 1000 | 2.69131417 | 0.38278833 | 6417.02563688 | 0 |
-| modificado_neutro | plano | 1500 | 2.72581004 | 0.29089206 | 7065.54153739 | 0 |
-| modificado_neutro | relevo_litologia | 500 | 2.18550965 | 0.16094222 | 7007.20516856 | 0 |
-| modificado_neutro | relevo_litologia | 750 | 2.74752294 | 0.27908928 | 8412.52154824 | 0 |
-| modificado_neutro | relevo_litologia | 1000 | 2.92381629 | 0.32508040 | 9108.55278759 | 0 |
-| modificado_neutro | relevo_litologia | 1500 | 3.13556708 | 0.51543918 | 8733.10693942 | 0 |
-| modificado_neutro | terreno | 500 | 2.32421775 | 0.27739071 | 7416.36831153 | 0 |
-| modificado_neutro | terreno | 750 | 2.72236520 | 0.15028132 | 8776.89895312 | 0 |
-| modificado_neutro | terreno | 1000 | 2.89039117 | 0.17027030 | 8526.69308410 | 0 |
-| modificado_neutro | terreno | 1500 | 3.28929586 | 0.21117972 | 9322.67687249 | 0 |
-| original | avulsao | 500 | 2.19090148 | 0.12456876 | 6030.22399436 | 0 |
-| original | avulsao | 750 | 2.69874383 | 0.15256534 | 7596.94824236 | 0 |
-| original | avulsao | 1000 | 2.74062182 | 0.53032652 | 6505.37492937 | 0 |
-| original | avulsao | 1500 | 2.97624177 | 0.41242972 | 7881.49076740 | 0 |
-| original | litologia_plana | 500 | 2.26236896 | 0.01194503 | 5989.28225913 | 0 |
-| original | litologia_plana | 750 | 2.92518910 | 0.48231897 | 7506.49743120 | 0 |
-| original | litologia_plana | 1000 | 2.96074713 | 0.37548398 | 6675.67184736 | 0 |
-| original | litologia_plana | 1500 | 2.88858386 | 0.38929538 | 7235.08526821 | 0 |
-| original | plano | 500 | 2.26236896 | 0.01194503 | 5989.28225913 | 0 |
-| original | plano | 750 | 2.92518910 | 0.48231897 | 7506.49743120 | 0 |
-| original | plano | 1000 | 2.96074713 | 0.37548398 | 6675.67184736 | 0 |
-| original | plano | 1500 | 2.88858386 | 0.38929538 | 7235.08526821 | 0 |
-| original | relevo_litologia | 500 | 2.18550965 | 0.16094222 | 7007.20516856 | 0 |
-| original | relevo_litologia | 750 | 2.74752294 | 0.27908928 | 8412.52154823 | 0 |
-| original | relevo_litologia | 1000 | 2.93660196 | 0.33308381 | 9104.88729768 | 0 |
-| original | relevo_litologia | 1500 | 2.92445477 | 0.58816912 | 9028.90665909 | 0 |
-| original | terreno | 500 | 2.32421775 | 0.27739071 | 7416.36831153 | 0 |
-| original | terreno | 750 | 2.72236520 | 0.15028132 | 8776.89895306 | 0 |
-| original | terreno | 1000 | 2.88033124 | 0.17303642 | 8636.45920379 | 0 |
-| original | terreno | 1500 | 3.43042515 | 0.56846023 | 9384.83327463 | 0 |
+| Variante | Cenário | Passos | Sinuosidade média | Desvio da sinuosidade | Deslocamento lateral médio | Erro do centerline | Valores inválidos |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| modificado_litologico | avulsao | 500 | 1.88131378 | 0.00000000 | 4881.73165862 | n/a | 0 |
+| modificado_litologico | avulsao | 750 | 2.82159890 | 0.00000000 | 6926.29546119 | n/a | 0 |
+| modificado_litologico | avulsao | 1000 | 2.85565792 | 0.00000000 | 6485.42812623 | n/a | 0 |
+| modificado_litologico | avulsao | 1500 | 3.72385786 | 0.00000000 | 7374.96511327 | n/a | 0 |
+| modificado_litologico | litologia_plana | 500 | 2.23505743 | 0.00000000 | 5287.33694258 | n/a | 0 |
+| modificado_litologico | litologia_plana | 750 | 2.22271915 | 0.00000000 | 4360.40176087 | n/a | 0 |
+| modificado_litologico | litologia_plana | 1000 | 2.70113204 | 0.00000000 | 6711.60587290 | n/a | 0 |
+| modificado_litologico | litologia_plana | 1500 | 3.53203298 | 0.00000000 | 5379.98194531 | n/a | 0 |
+| modificado_litologico | plano | 500 | 1.69607697 | 0.00000000 | 5302.97956233 | n/a | 0 |
+| modificado_litologico | plano | 750 | 3.23878973 | 0.00000000 | 7117.09492671 | n/a | 0 |
+| modificado_litologico | plano | 1000 | 2.85565792 | 0.00000000 | 6485.42812623 | n/a | 0 |
+| modificado_litologico | plano | 1500 | 2.69238361 | 0.00000000 | 7895.87008246 | n/a | 0 |
+| modificado_litologico | relevo_litologia | 500 | 3.04317816 | 0.00000000 | 8258.69732260 | n/a | 0 |
+| modificado_litologico | relevo_litologia | 750 | 2.57004820 | 0.00000000 | 6674.32280505 | n/a | 0 |
+| modificado_litologico | relevo_litologia | 1000 | 2.96824336 | 0.00000000 | 7232.17386962 | n/a | 0 |
+| modificado_litologico | relevo_litologia | 1500 | 2.78349898 | 0.00000000 | 7095.35887571 | n/a | 0 |
+| modificado_litologico | terreno | 500 | 2.18024279 | 0.00000000 | 7523.63866240 | n/a | 0 |
+| modificado_litologico | terreno | 750 | 2.73521260 | 0.00000000 | 8876.95596648 | n/a | 0 |
+| modificado_litologico | terreno | 1000 | 3.22408465 | 0.00000000 | 9462.45713190 | n/a | 0 |
+| modificado_litologico | terreno | 1500 | 2.80375133 | 0.00000000 | 7376.64987849 | n/a | 0 |
+| modificado_neutro | avulsao | 500 | 1.88131378 | 0.00000000 | 4881.73165862 | n/a | 0 |
+| modificado_neutro | avulsao | 750 | 2.82159890 | 0.00000000 | 6926.29546119 | n/a | 0 |
+| modificado_neutro | avulsao | 1000 | 2.50423665 | 0.00000000 | 6457.70750651 | n/a | 0 |
+| modificado_neutro | avulsao | 1500 | 3.90339939 | 0.00000000 | 7345.83869999 | n/a | 0 |
+| modificado_neutro | litologia_plana | 500 | 1.69607697 | 0.00000000 | 5302.97956233 | n/a | 0 |
+| modificado_neutro | litologia_plana | 750 | 3.23878973 | 0.00000000 | 7117.09492671 | n/a | 0 |
+| modificado_neutro | litologia_plana | 1000 | 2.50423665 | 0.00000000 | 6457.70750651 | n/a | 0 |
+| modificado_neutro | litologia_plana | 1500 | 3.90339939 | 0.00000000 | 7345.83869999 | n/a | 0 |
+| modificado_neutro | plano | 500 | 1.69607697 | 0.00000000 | 5302.97956233 | n/a | 0 |
+| modificado_neutro | plano | 750 | 3.23878973 | 0.00000000 | 7117.09492671 | n/a | 0 |
+| modificado_neutro | plano | 1000 | 2.50423665 | 0.00000000 | 6457.70750651 | n/a | 0 |
+| modificado_neutro | plano | 1500 | 3.90339939 | 0.00000000 | 7345.83869999 | n/a | 0 |
+| modificado_neutro | relevo_litologia | 500 | 2.77923704 | 0.00000000 | 9065.31671045 | n/a | 0 |
+| modificado_neutro | relevo_litologia | 750 | 2.69662181 | 0.00000000 | 9373.42833688 | n/a | 0 |
+| modificado_neutro | relevo_litologia | 1000 | 3.23175634 | 0.00000000 | 9743.14211916 | n/a | 0 |
+| modificado_neutro | relevo_litologia | 1500 | 3.74755465 | 0.00000000 | 11172.39908835 | n/a | 0 |
+| modificado_neutro | terreno | 500 | 2.31909661 | 0.00000000 | 7923.05186964 | n/a | 0 |
+| modificado_neutro | terreno | 750 | 2.88456094 | 0.00000000 | 9910.74567910 | n/a | 0 |
+| modificado_neutro | terreno | 1000 | 3.38194940 | 0.00000000 | 10533.46300310 | n/a | 0 |
+| modificado_neutro | terreno | 1500 | 3.49371220 | 0.00000000 | 10414.22870261 | n/a | 0 |
+| original | avulsao | 500 | 1.88131378 | 0.00000000 | 4881.73165862 | n/a | 0 |
+| original | avulsao | 750 | 2.85390513 | 0.00000000 | 6926.34219892 | n/a | 0 |
+| original | avulsao | 1000 | 2.97289537 | 0.00000000 | 6703.21185443 | n/a | 0 |
+| original | avulsao | 1500 | 2.83859561 | 0.00000000 | 8146.90593503 | n/a | 0 |
+| original | litologia_plana | 500 | 1.69607697 | 0.00000000 | 5302.97956234 | n/a | 0 |
+| original | litologia_plana | 750 | 3.24150913 | 0.00000000 | 7040.54491934 | n/a | 0 |
+| original | litologia_plana | 1000 | 2.97289537 | 0.00000000 | 6703.21185443 | n/a | 0 |
+| original | litologia_plana | 1500 | 2.83859561 | 0.00000000 | 8146.90593503 | n/a | 0 |
+| original | plano | 500 | 1.69607697 | 0.00000000 | 5302.97956234 | n/a | 0 |
+| original | plano | 750 | 3.24150913 | 0.00000000 | 7040.54491934 | n/a | 0 |
+| original | plano | 1000 | 2.97289537 | 0.00000000 | 6703.21185443 | n/a | 0 |
+| original | plano | 1500 | 2.83859561 | 0.00000000 | 8146.90593503 | n/a | 0 |
+| original | relevo_litologia | 500 | 2.77923704 | 0.00000000 | 9065.31671044 | n/a | 0 |
+| original | relevo_litologia | 750 | 2.69662181 | 0.00000000 | 9373.42833688 | n/a | 0 |
+| original | relevo_litologia | 1000 | 3.23175653 | 0.00000000 | 9743.14211896 | n/a | 0 |
+| original | relevo_litologia | 1500 | 4.02478616 | 0.00000000 | 11728.00728097 | n/a | 0 |
+| original | terreno | 500 | 2.31909661 | 0.00000000 | 7923.05186964 | n/a | 0 |
+| original | terreno | 750 | 2.88456094 | 0.00000000 | 9910.74567911 | n/a | 0 |
+| original | terreno | 1000 | 3.53369559 | 0.00000000 | 10590.79860034 | n/a | 0 |
+| original | terreno | 1500 | 3.54497321 | 0.00000000 | 10296.96239387 | n/a | 0 |
 
 ## Critério de desempenho e qualidade
 
@@ -151,46 +151,46 @@ O limite de 5% é um critério de custo, não uma reprovação automática. Até
 
 | Variante | Cenário | Passos | Overhead vs original | Variação da sinuosidade | Variação do deslocamento | Classificação |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| modificado_litologico | avulsao | 500 | -2.46% | -0.00% | -0.00% | dentro do limite de 5% |
-| modificado_litologico | avulsao | 750 | -2.53% | 0.00% | -0.00% | dentro do limite de 5% |
-| modificado_litologico | avulsao | 1000 | -4.71% | 2.85% | 2.60% | dentro do limite de 5% |
-| modificado_litologico | avulsao | 1500 | 2.91% | -12.07% | -20.12% | dentro do limite de 5% |
-| modificado_litologico | litologia_plana | 500 | 2.71% | 14.49% | -2.41% | dentro do limite de 5% |
-| modificado_litologico | litologia_plana | 750 | 1.04% | -11.40% | -20.18% | dentro do limite de 5% |
-| modificado_litologico | litologia_plana | 1000 | -16.94% | -3.30% | -5.46% | dentro do limite de 5% |
-| modificado_litologico | litologia_plana | 1500 | -15.95% | -6.07% | -4.85% | dentro do limite de 5% |
-| modificado_litologico | plano | 500 | -13.30% | -0.00% | -0.00% | dentro do limite de 5% |
-| modificado_litologico | plano | 750 | -5.85% | 0.00% | 0.01% | dentro do limite de 5% |
-| modificado_litologico | plano | 1000 | 1.07% | 3.41% | 10.41% | dentro do limite de 5% |
-| modificado_litologico | plano | 1500 | -9.19% | -7.10% | -7.88% | dentro do limite de 5% |
-| modificado_litologico | relevo_litologia | 500 | 24.40% | 19.09% | 10.99% | justificar com ganho de qualidade |
-| modificado_litologico | relevo_litologia | 750 | 9.51% | 1.88% | -13.98% | justificar com ganho de qualidade |
-| modificado_litologico | relevo_litologia | 1000 | 5.78% | -1.40% | -6.93% | justificar com ganho de qualidade |
-| modificado_litologico | relevo_litologia | 1500 | 2.85% | 3.38% | 9.37% | dentro do limite de 5% |
-| modificado_litologico | terreno | 500 | 33.13% | 4.59% | -5.23% | justificar com ganho de qualidade |
-| modificado_litologico | terreno | 750 | 14.04% | -11.61% | -18.32% | justificar com ganho de qualidade |
-| modificado_litologico | terreno | 1000 | 3.47% | -13.83% | -15.28% | dentro do limite de 5% |
-| modificado_litologico | terreno | 1500 | -7.17% | -19.20% | -20.58% | dentro do limite de 5% |
-| modificado_neutro | avulsao | 500 | 15.32% | -0.00% | -0.00% | justificar com ganho de qualidade |
-| modificado_neutro | avulsao | 750 | 14.68% | 0.00% | -0.00% | justificar com ganho de qualidade |
-| modificado_neutro | avulsao | 1000 | 7.46% | -1.12% | 0.23% | justificar com ganho de qualidade |
-| modificado_neutro | avulsao | 1500 | 3.34% | -1.82% | -6.88% | dentro do limite de 5% |
-| modificado_neutro | litologia_plana | 500 | -9.32% | -0.00% | -0.00% | dentro do limite de 5% |
-| modificado_neutro | litologia_plana | 750 | -3.13% | 0.00% | 0.01% | dentro do limite de 5% |
-| modificado_neutro | litologia_plana | 1000 | -11.31% | -9.10% | -3.87% | dentro do limite de 5% |
-| modificado_neutro | litologia_plana | 1500 | -8.62% | -5.64% | -2.34% | dentro do limite de 5% |
-| modificado_neutro | plano | 500 | -19.27% | -0.00% | -0.00% | dentro do limite de 5% |
-| modificado_neutro | plano | 750 | -10.86% | 0.00% | 0.01% | dentro do limite de 5% |
-| modificado_neutro | plano | 1000 | -5.42% | -9.10% | -3.87% | dentro do limite de 5% |
-| modificado_neutro | plano | 1500 | -13.26% | -5.64% | -2.34% | dentro do limite de 5% |
-| modificado_neutro | relevo_litologia | 500 | 2.73% | 0.00% | -0.00% | dentro do limite de 5% |
-| modificado_neutro | relevo_litologia | 750 | 1.59% | 0.00% | 0.00% | dentro do limite de 5% |
-| modificado_neutro | relevo_litologia | 1000 | -0.55% | -0.44% | 0.04% | dentro do limite de 5% |
-| modificado_neutro | relevo_litologia | 1500 | -0.12% | 7.22% | -3.28% | dentro do limite de 5% |
-| modificado_neutro | terreno | 500 | -10.81% | -0.00% | 0.00% | dentro do limite de 5% |
-| modificado_neutro | terreno | 750 | -4.58% | 0.00% | 0.00% | dentro do limite de 5% |
-| modificado_neutro | terreno | 1000 | 3.46% | 0.35% | -1.27% | dentro do limite de 5% |
-| modificado_neutro | terreno | 1500 | 4.36% | -4.11% | -0.66% | dentro do limite de 5% |
+| modificado_litologico | avulsao | 500 | 6.46% | -0.00% | -0.00% | justificar com ganho de qualidade |
+| modificado_litologico | avulsao | 750 | 7.03% | -1.13% | -0.00% | justificar com ganho de qualidade |
+| modificado_litologico | avulsao | 1000 | 14.03% | -3.94% | -3.25% | justificar com ganho de qualidade |
+| modificado_litologico | avulsao | 1500 | 5.82% | 31.19% | -9.48% | justificar com ganho de qualidade |
+| modificado_litologico | litologia_plana | 500 | 27.50% | 31.78% | -0.29% | justificar com ganho de qualidade |
+| modificado_litologico | litologia_plana | 750 | 18.20% | -31.43% | -38.07% | justificar com ganho de qualidade |
+| modificado_litologico | litologia_plana | 1000 | -2.98% | -9.14% | 0.13% | dentro do limite de 5% |
+| modificado_litologico | litologia_plana | 1500 | -0.77% | 24.43% | -33.96% | dentro do limite de 5% |
+| modificado_litologico | plano | 500 | 5.01% | 0.00% | -0.00% | justificar com ganho de qualidade |
+| modificado_litologico | plano | 750 | 7.00% | -0.08% | 1.09% | justificar com ganho de qualidade |
+| modificado_litologico | plano | 1000 | 9.55% | -3.94% | -3.25% | justificar com ganho de qualidade |
+| modificado_litologico | plano | 1500 | 2.14% | -5.15% | -3.08% | dentro do limite de 5% |
+| modificado_litologico | relevo_litologia | 500 | 13.02% | 9.50% | -8.90% | justificar com ganho de qualidade |
+| modificado_litologico | relevo_litologia | 750 | 17.34% | -4.69% | -28.80% | justificar com ganho de qualidade |
+| modificado_litologico | relevo_litologia | 1000 | 10.54% | -8.15% | -25.77% | justificar com ganho de qualidade |
+| modificado_litologico | relevo_litologia | 1500 | -9.91% | -30.84% | -39.50% | dentro do limite de 5% |
+| modificado_litologico | terreno | 500 | 15.37% | -5.99% | -5.04% | justificar com ganho de qualidade |
+| modificado_litologico | terreno | 750 | 4.47% | -5.18% | -10.43% | dentro do limite de 5% |
+| modificado_litologico | terreno | 1000 | -2.24% | -8.76% | -10.65% | dentro do limite de 5% |
+| modificado_litologico | terreno | 1500 | -13.17% | -20.91% | -28.36% | dentro do limite de 5% |
+| modificado_neutro | avulsao | 500 | -2.03% | -0.00% | -0.00% | dentro do limite de 5% |
+| modificado_neutro | avulsao | 750 | 3.12% | -1.13% | -0.00% | dentro do limite de 5% |
+| modificado_neutro | avulsao | 1000 | 7.44% | -15.76% | -3.66% | justificar com ganho de qualidade |
+| modificado_neutro | avulsao | 1500 | 8.54% | 37.51% | -9.83% | justificar com ganho de qualidade |
+| modificado_neutro | litologia_plana | 500 | -1.23% | 0.00% | -0.00% | dentro do limite de 5% |
+| modificado_neutro | litologia_plana | 750 | 3.55% | -0.08% | 1.09% | dentro do limite de 5% |
+| modificado_neutro | litologia_plana | 1000 | 8.10% | -15.76% | -3.66% | justificar com ganho de qualidade |
+| modificado_neutro | litologia_plana | 1500 | 16.88% | 37.51% | -9.83% | justificar com ganho de qualidade |
+| modificado_neutro | plano | 500 | 11.79% | 0.00% | -0.00% | justificar com ganho de qualidade |
+| modificado_neutro | plano | 750 | 8.58% | -0.08% | 1.09% | justificar com ganho de qualidade |
+| modificado_neutro | plano | 1000 | 10.22% | -15.76% | -3.66% | justificar com ganho de qualidade |
+| modificado_neutro | plano | 1500 | 12.54% | 37.51% | -9.83% | justificar com ganho de qualidade |
+| modificado_neutro | relevo_litologia | 500 | -0.00% | 0.00% | 0.00% | dentro do limite de 5% |
+| modificado_neutro | relevo_litologia | 750 | 1.45% | -0.00% | 0.00% | dentro do limite de 5% |
+| modificado_neutro | relevo_litologia | 1000 | 6.59% | -0.00% | 0.00% | justificar com ganho de qualidade |
+| modificado_neutro | relevo_litologia | 1500 | 5.96% | -6.89% | -4.74% | justificar com ganho de qualidade |
+| modificado_neutro | terreno | 500 | 5.74% | 0.00% | 0.00% | justificar com ganho de qualidade |
+| modificado_neutro | terreno | 750 | 4.76% | 0.00% | -0.00% | dentro do limite de 5% |
+| modificado_neutro | terreno | 1000 | 3.13% | -4.29% | -0.54% | dentro do limite de 5% |
+| modificado_neutro | terreno | 1500 | -1.80% | -1.45% | 1.14% | dentro do limite de 5% |
 | original | avulsao | 500 | 0.00% | 0.00% | 0.00% | baseline |
 | original | avulsao | 750 | 0.00% | 0.00% | 0.00% | baseline |
 | original | avulsao | 1000 | 0.00% | 0.00% | 0.00% | baseline |
