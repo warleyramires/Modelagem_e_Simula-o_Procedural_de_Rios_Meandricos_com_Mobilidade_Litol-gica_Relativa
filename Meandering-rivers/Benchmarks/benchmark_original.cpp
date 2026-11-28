@@ -10,6 +10,8 @@
 #include "meanders.h"
 #undef private
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 #include "benchmark_common.h"
 
 static int SeedForRepeat(int repeat)
@@ -29,7 +31,8 @@ int main(int argc, char** argv)
 	const std::string scenario = argv[1];
 	const int steps = std::stoi(argv[2]);
 	const int repetitions = std::stoi(argv[3]);
-	if (!IsKnownScenario(scenario) || steps <= 0 || repetitions <= 0)
+	if (!IsKnownScenario(scenario) || steps <= 0 || repetitions <= 0
+		|| (scenario == "rio_real" && !HasRealRiverData()))
 		return 2;
 
 	WriteCsvHeader(std::cout);
@@ -40,6 +43,7 @@ int main(int argc, char** argv)
 		MeanderSimulation simulation(seed, terrain);
 		simulation.AddChannel(Channel(InitialPoints(scenario), 50.0));
 		const std::vector<Vector2> initialPoints = simulation.channels.at(0).Points();
+		const std::vector<Vector2> referencePoints = LoadRealReferenceCenterline();
 
 		const auto begin = std::chrono::steady_clock::now();
 		RunScenarioSteps(simulation, scenario, steps);
@@ -48,9 +52,11 @@ int main(int argc, char** argv)
 
 		if (simulation.channels.empty())
 			return 3;
+		if (simulation.channels.at(0).Size() < 4)
+			return 4;
 		Channel finalChannel = simulation.channels.at(0);
 		WriteCsvRow(std::cout, "original", scenario, steps, seed, repeat,
-			MeasureChannel(finalChannel, initialPoints, elapsedNs, steps));
+			MeasureChannel(finalChannel, initialPoints, referencePoints, elapsedNs, steps));
 	}
 	return 0;
 }

@@ -60,6 +60,11 @@ def main():
         time_per_step = [float(row["time_per_step_ns"]) for row in rows]
         sinuosity = [float(row["final_sinuosity"]) for row in rows]
         displacement = [float(row["max_lateral_displacement"]) for row in rows]
+        reference_errors = [
+            float(row.get("reference_centerline_error", -1.0))
+            for row in rows
+            if float(row.get("reference_centerline_error", -1.0)) >= 0.0
+        ]
         time_mean, time_std = mean_std(times)
         sinuosity_mean, sinuosity_std = mean_std(sinuosity)
         baseline = original_times[(scenario, steps)]
@@ -85,6 +90,9 @@ def main():
             "final_sinuosity_mean": sinuosity_mean,
             "final_sinuosity_stddev": sinuosity_std,
             "max_lateral_displacement_mean": statistics.mean(displacement),
+            "reference_centerline_error_mean": (
+                statistics.mean(reference_errors) if reference_errors else ""
+            ),
             "invalid_values_total": sum(int(row["invalid_values"]) for row in rows),
         })
 
@@ -140,12 +148,13 @@ def main():
             )
 
         handle.write("\n## Resultados geométricos\n\n")
-        handle.write("| Variante | Cenário | Passos | Sinuosidade média | Desvio da sinuosidade | Deslocamento lateral médio | Valores inválidos |\n")
-        handle.write("| --- | --- | ---: | ---: | ---: | ---: | ---: |\n")
+        handle.write("| Variante | Cenário | Passos | Sinuosidade média | Desvio da sinuosidade | Deslocamento lateral médio | Erro do centerline | Valores inválidos |\n")
+        handle.write("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |\n")
         for row in summary_rows:
             handle.write(
                 f"| {row['variant']} | {row['scenario']} | {row['steps']} | {row['final_sinuosity_mean']:.8f} | "
                 f"{row['final_sinuosity_stddev']:.8f} | {row['max_lateral_displacement_mean']:.8f} | "
+                f"{row['reference_centerline_error_mean'] if row['reference_centerline_error_mean'] != '' else 'n/a'} | "
                 f"{row['invalid_values_total']} |\n"
             )
 

@@ -54,6 +54,9 @@ printf '%s\n' "flags,-std=c++17 -O2" >> "$ENVIRONMENT"
 printf '%s\n' "system,$(uname -srmo)" >> "$ENVIRONMENT"
 
 SCENARIOS=(plano litologia_plana terreno relevo_litologia avulsao)
+if [[ -n "${REAL_RIVER_DATA_DIR:-}" ]]; then
+	SCENARIOS+=(rio_real)
+fi
 STEPS=(500 750 1000 1500)
 : > "$TEMP/original-all.csv"
 first_original=1

@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 #include "benchmark_common.h"
 
 static int SeedForRepeat(int repeat)
@@ -24,7 +26,8 @@ int main(int argc, char** argv)
 	const int steps = std::stoi(argv[3]);
 	const int repetitions = std::stoi(argv[4]);
 	if ((variant != "modificado_neutro" && variant != "modificado_litologico")
-		|| !IsKnownScenario(scenario) || steps <= 0 || repetitions <= 0)
+		|| !IsKnownScenario(scenario) || steps <= 0 || repetitions <= 0
+		|| (scenario == "rio_real" && !HasRealRiverData()))
 		return 2;
 
 	WriteCsvHeader(std::cout);
@@ -33,11 +36,12 @@ int main(int argc, char** argv)
 		const int seed = SeedForRepeat(repeat);
 		const ScalarField2D terrain = BuildTerrain(scenario);
 		const ScalarField2D mobility = variant == "modificado_litologico"
-			? BuildHeterogeneousLithology(terrain, scenario)
+			? BuildLithology(scenario, terrain)
 			: BuildUniformLithology(terrain);
 		MeanderSimulation simulation(seed, terrain, mobility);
 		simulation.AddChannel(Channel(InitialPoints(scenario), 50.0));
 		const std::vector<Vector2> initialPoints = simulation.Channels().at(0).Points();
+		const std::vector<Vector2> referencePoints = LoadRealReferenceCenterline();
 
 		const auto begin = std::chrono::steady_clock::now();
 		RunScenarioSteps(simulation, scenario, steps);
@@ -46,9 +50,11 @@ int main(int argc, char** argv)
 
 		if (simulation.Channels().empty())
 			return 3;
+		if (simulation.Channels().at(0).Size() < 4)
+			return 4;
 		Channel finalChannel = simulation.Channels().at(0);
 		WriteCsvRow(std::cout, variant, scenario, steps, seed, repeat,
-			MeasureChannel(finalChannel, initialPoints, elapsedNs, steps));
+			MeasureChannel(finalChannel, initialPoints, referencePoints, elapsedNs, steps));
 	}
 	return 0;
 }
