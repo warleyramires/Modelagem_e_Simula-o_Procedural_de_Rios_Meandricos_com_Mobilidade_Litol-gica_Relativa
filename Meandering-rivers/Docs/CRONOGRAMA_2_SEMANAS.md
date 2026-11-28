@@ -35,6 +35,11 @@ passos. O cenário de avulsão dispara as duas avulsões em 70% do total: 350,
 | 11 | Revisão conjunta | Revisão conjunta | Cobertura e números conferidos |
 | 12 | Registrar cronograma e histórico | Conferir estado do repositório | Entrega pronta para push |
 
+O item de dados reais é executado com `Tools/prepare_real_river.sh`, que gera
+o pacote `terrain.png`, `lithology.png`, `centerline.csv` e `manifest.json`.
+O cenário `rio_real` entra no benchmark apenas quando
+`REAL_RIVER_DATA_DIR` aponta para esse pacote.
+
 ## Casos de teste
 
 - `E=1`: equivalência com a baseline em simulação curta.
@@ -46,6 +51,8 @@ passos. O cenário de avulsão dispara as duas avulsões em 70% do total: 350,
 - Relevo e litologia: verifica interação entre os dois campos em cada duração.
 - Avulsão com litologia: verifica estabilidade durante mudança de trajetória.
 - Terreno de referência real: verifica carregamento, execução e saída.
+- Rio real: compara as duas implementações usando o mesmo DEM, centerline e
+  campo litológico pré-processados.
 
 ## Commits planejados
 

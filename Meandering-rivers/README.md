@@ -103,9 +103,15 @@ Os dados brutos, o resumo estatístico e o relatório estão em
 custo adicional das consultas litológicas. A metodologia detalhada está em
 [Benchmarks/README.md](Benchmarks/README.md).
 
-O benchmark também inclui o cenário `relevo_litologia_1000`, que combina
-relevo ondulado e campo litológico heterogêneo. Os cenários planos continuam
-como controles isolados, não como substitutos de um experimento real.
+O benchmark também inclui o cenário `relevo_litologia`, que combina relevo
+ondulado e campo litológico heterogêneo. Os cenários planos continuam como
+controles isolados, não como substitutos de um experimento real.
+
+Para preparar um experimento com dados geográficos, consulte
+[`Resources/real_river/README.md`](Resources/real_river/README.md) e execute
+[`Tools/prepare_real_river.sh`](Tools/prepare_real_river.sh). O benchmark
+carrega o mesmo DEM, campo litológico e centerline na baseline e na versão
+modificada.
 
 ## Uso do campo litológico
 

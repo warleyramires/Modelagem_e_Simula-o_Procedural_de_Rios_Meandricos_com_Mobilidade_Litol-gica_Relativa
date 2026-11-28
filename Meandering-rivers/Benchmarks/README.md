@@ -17,14 +17,19 @@ equipe de Warley Ramires, Alberto Henrique e Pedro Henrique Braga.
 - `terreno`: relevo sintético.
 - `relevo_litologia`: relevo ondulado com campo litológico heterogêneo.
 - `avulsao`: duas avulsões em 70% da simulação.
+- `rio_real`: pacote externo com `terrain.png`, `lithology.png` e `centerline.csv`.
 
 Cada cenário é executado com 500, 750, 1000 e 1500 passos. `plano` e
 `litologia_plana` são controles isolados; `relevo_litologia` cobre a interação
 entre relevo e litologia. A quantidade de passos aparece explicitamente nos
 CSVs para impedir comparações entre execuções de durações diferentes.
 
-Cada cenário/variante possui 100 repetições. As sementes `1234`, `4321` e
-`9999` são distribuídas ciclicamente entre as repetições. A geometria inicial,
+O cenário `rio_real` só é incluído quando `REAL_RIVER_DATA_DIR` aponta para um
+pacote preparado em `Resources/real_river` ou em outro diretório compatível.
+
+O número de repetições é controlado por `BENCHMARK_REPETITIONS`; os resultados
+versionados informam a quantidade efetivamente executada. As sementes `1234`,
+`4321` e `9999` são distribuídas ciclicamente entre as repetições. A geometria inicial,
 o número de passos e os parâmetros de simulação são mantidos iguais.
 
 ## Medição
@@ -51,6 +56,13 @@ extensão pode ser mais lenta e ainda produzir um resultado mais realista.
 
 ```sh
 ./Benchmarks/run_benchmark.sh
+```
+
+Para incluir o rio real:
+
+```sh
+REAL_RIVER_DATA_DIR="$PWD/Resources/real_river" \
+  BENCHMARK_REPETITIONS=3 ./Benchmarks/run_benchmark.sh
 ```
 
 Os resultados são gerados em `Benchmarks/results/`:
